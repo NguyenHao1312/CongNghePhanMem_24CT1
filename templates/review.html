@@ -1,0 +1,111 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>UniMS — Xem trước hệ thống Quản lý Đại học</title>
+  <meta name="description" content="Xem trước giao diện hệ thống quản lý đại học UniMS. Trải nghiệm Dashboard, quản lý sinh viên, giáo viên, lớp học, bảng điểm, AI trợ lý và nhiều hơn nữa.">
+  <meta name="theme-color" content="#3b82f6">
+  <link rel="icon" href="{% static \'assets/favicon.svg\' %}" type="image/svg+xml">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+  <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" rel="stylesheet">
+  <link rel="stylesheet" href="{% static \'css/variables.css\' %}">
+  <link rel="stylesheet" href="{% static \'css/review.css\' %}">
+  <link rel="stylesheet" href="{% static \'css/review-mobile.css\' %}" media="screen and (max-width: 1024px)">
+</head>
+<body>
+  <div class="review-page">
+    <!-- Reading Progress Bar -->
+    <div id="rv-progress-bar" style="position: fixed; top: 0; left: 0; height: 3px; width: 0%; background: linear-gradient(90deg, #0d9488, #14b8a6, #6366f1); z-index: 9999; transition: width 0.1s linear; box-shadow: 0 0 8px rgba(20,184,166,0.6);"></div>
+
+    <!-- Scroll to Top Button -->
+    <button id="rv-scroll-top" title="Lên đầu trang" style="position: fixed; bottom: 80px; right: 20px; width: 44px; height: 44px; border-radius: 50%; background: linear-gradient(135deg,#0d9488,#14b8a6); color: #fff; border: none; cursor: pointer; display: none; align-items: center; justify-content: center; font-size: 1.1rem; box-shadow: 0 4px 16px rgba(13,148,136,0.4); z-index: 9998; transition: opacity 0.3s, transform 0.3s;">
+      <i class="fas fa-arrow-up"></i>
+    </button>
+
+    <!-- Animated Background Particles -->
+    <div class="login-particles" id="login-particles"></div>
+
+    <!-- ═══ TOP HEADER ═══ -->
+    <header class="review-header">
+      <div class="review-logo">
+        <i class="fas fa-graduation-cap"></i>
+        <span>Uni<span class="accent">MS</span></span>
+      </div>
+      <div class="review-auth-btns">
+        <div id="rv-clock" style="margin-right: 15px; font-weight: 500; font-size: 0.9rem; display: flex; align-items: center; gap: 8px;">
+          <i class="far fa-clock"></i> <span id="rv-time">--:--:--</span>
+          <span style="opacity: 0.5;">|</span>
+          <span id="rv-date">--/--/----</span>
+        </div>
+        <button class="btn-review-login" id="rv-lang-toggle" style="margin-right: 8px; padding: 0 12px;">
+          <i class="fas fa-globe"></i>
+          <span id="rv-lang-label">VI</span>
+        </button>
+        <button class="btn-review-login" id="rv-header-login">
+          <i class="fas fa-sign-in-alt"></i>
+          <span data-i18n="login">Đăng nhập</span>
+        </button>
+        <button class="btn-review-signup" id="rv-header-signup">
+          <i class="fas fa-user-plus"></i>
+          <span data-i18n="register">Đăng ký</span>
+        </button>
+      </div>
+    </header>
+
+    <!-- ═══ HORIZONTAL NAV TABS ═══ -->
+    <nav class="review-nav" id="review-nav">
+      <!-- Rendered by review.js -->
+    </nav>
+
+    <!-- ═══ CONTENT AREA ═══ -->
+    <div class="review-content" id="review-content">
+      <!-- Rendered by review.js -->
+    </div>
+
+    <!-- ═══ LOGIN REQUIRED MODAL ═══ -->
+    <div class="rv-modal-overlay" id="rv-login-modal">
+      <div class="rv-modal">
+        <div class="rv-modal-icon">
+          <i class="fas fa-lock"></i>
+        </div>
+        <h3 data-i18n="login_required">Yêu cầu Đăng nhập</h3>
+        <p data-i18n="login_required_desc">Hãy đăng nhập hoặc đăng ký tài khoản để có thể khám phá thêm các tính năng quản lý chuyên sâu và trải nghiệm môi trường số toàn diện của UniMS.</p>
+        <div class="rv-modal-actions">
+          <button class="rv-btn-ghost" id="rv-modal-close">
+            <i class="fas fa-times" style="margin-right: 6px;"></i> <span data-i18n="close">Đóng</span>
+          </button>
+          <button class="rv-btn-primary" id="rv-modal-login">
+            <i class="fas fa-sign-in-alt" style="margin-right: 6px;"></i> <span data-i18n="login_now">Đăng nhập ngay</span>
+          </button>
+        </div>
+      </div>
+    </div>
+
+    <!-- ═══ INFO MODAL (For News & Uni Details) ═══ -->
+    <div class="rv-modal-overlay" id="rv-info-modal">
+      <div class="rv-modal" style="max-width: 700px; width: 90%; max-height: 90vh; overflow-y: auto;">
+        <div style="display: flex; justify-content: flex-end;">
+          <button class="rv-btn-ghost" id="rv-info-modal-close" style="padding: 4px 8px;">
+            <i class="fas fa-times"></i>
+          </button>
+        </div>
+        <div id="rv-info-modal-content">
+          <!-- Dynamically populated -->
+        </div>
+      </div>
+    </div>
+
+    <!-- ═══ BOTTOM WATERMARK ═══ -->
+    <div class="rv-watermark">
+      <span><i class="fas fa-eye" style="margin-right: 6px;"></i> <span data-i18n="preview_watermark">Bạn đang xem bản xem trước — Đăng nhập để trải nghiệm đầy đủ tính năng</span></span>
+      <button id="rv-watermark-login"><span data-i18n="login_now">Đăng nhập ngay</span> <i class="fas fa-arrow-right" style="margin-left: 4px;"></i></button>
+    </div>
+
+  </div>
+
+  <script src="{% static \'js/database.js\' %}"></script>
+  <script src="{% static \'js/review.js\' %}"></script>
+</body>
+</html>

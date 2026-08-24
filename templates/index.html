@@ -1,0 +1,173 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>UniMS - Hệ thống Quản lý Đại học</title>
+  <meta name="description" content="Hệ thống quản lý sinh viên hiện đại, hỗ trợ dark mode, đa ngôn ngữ, tích hợp AI Assistant.">
+  <meta name="theme-color" content="#3b82f6">
+  <link rel="icon" href="{% static \'assets/favicon.svg\' %}" type="image/svg+xml">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+  <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" rel="stylesheet">
+  <link rel="stylesheet" href="{% static \'css/variables.css\' %}">
+  <link rel="stylesheet" href="{% static \'css/main.css\' %}">
+  <link rel="stylesheet" href="{% static \'css/mobile.css\' %}" media="screen and (max-width: 1024px)">
+  <style>
+    .sidebar.collapsed .sidebar-logo { display: none; }
+    .sidebar.collapsed .sidebar-header { justify-content: center; }
+    .sidebar.collapsed #btn-logout { display: none; }
+    .sidebar.collapsed .sidebar-user { justify-content: center; }
+    .sidebar.collapsed .sidebar-footer { padding: var(--space-4) 0; display: flex; justify-content: center; }
+  </style>
+</head>
+<body>
+  <!-- Sidebar Navigation -->
+  <aside class="sidebar" id="sidebar">
+    <div class="sidebar-header">
+      <div class="sidebar-logo">
+        <i class="fas fa-graduation-cap"></i>
+        <span class="sidebar-brand">Uni<span class="brand-accent">MS</span></span>
+      </div>
+      <button class="sidebar-toggle" id="sidebar-toggle" title="Toggle Sidebar">
+        <i class="fas fa-bars"></i>
+      </button>
+    </div>
+    <nav class="sidebar-nav" id="sidebar-nav">
+      <!-- Nav items rendered by app.js -->
+    </nav>
+    <div class="sidebar-footer">
+      <div class="sidebar-user">
+        <div style="display: flex; align-items: center; gap: 10px; cursor: pointer;" onclick="window.location.hash='#/profile'" title="Xem hồ sơ">
+          <div class="avatar avatar-sm" id="user-avatar" style="background: var(--primary-100); color: var(--primary-600); font-weight: bold; border-radius: 50%; width: 32px; height: 32px; display: flex; align-items: center; justify-content: center; background-size: cover; background-position: center;">
+            <i class="fas fa-user"></i>
+          </div>
+          <div class="sidebar-user-info">
+            <span class="sidebar-user-name" id="user-name" style="font-weight: 600; font-size: 0.9rem; white-space: nowrap; text-overflow: ellipsis; overflow: hidden;">User</span>
+            <span class="sidebar-user-role" id="user-role" style="font-size: 0.75rem; color: var(--text-secondary);">Role</span>
+          </div>
+        </div>
+        <button class="btn-icon" id="btn-logout" title="Đăng xuất" style="color: var(--danger-500); z-index: 2;">
+          <i class="fas fa-sign-out-alt"></i>
+        </button>
+      </div>
+    </div>
+  </aside>
+
+  <!-- Main Content -->
+  <main class="main-wrapper" id="main-wrapper">
+    <!-- Floating Cubes Background -->
+    <div class="login-particles" id="dashboard-particles" style="position: fixed; top: 0; left: 0; width: 100vw; height: 100vh; z-index: -1; pointer-events: none;"></div>
+    
+    <!-- Top Header -->
+    <header class="top-header" id="top-header">
+      <div class="header-left">
+        <div class="header-logo mobile-menu-toggle" id="mobile-menu-toggle" style="align-items: center; gap: var(--space-2); cursor: pointer; font-weight: 700; font-size: 1.25rem; margin-right: var(--space-4);">
+          <i class="fas fa-graduation-cap" style="color: var(--primary-500);"></i>
+          <span>Uni<span class="brand-accent">MS</span></span>
+        </div>
+        
+        <!-- Hiển thị tên trường cho Dashboard theo yêu cầu -->
+        <div id="header-university-display" style="display: none; align-items: center; gap: 8px; margin-right: var(--space-4); background: linear-gradient(135deg, rgba(59,130,246,0.08), rgba(16,185,129,0.08)); padding: 6px 14px; border-radius: var(--radius-full); border: 1px solid rgba(59,130,246,0.15);">
+          <div style="width: 28px; height: 28px; border-radius: 50%; background: var(--bg-primary); display: flex; justify-content: center; align-items: center; box-shadow: 0 2px 4px rgba(0,0,0,0.05);">
+             <i class="fas fa-university" style="color: var(--primary-600); font-size: 0.85rem;"></i>
+          </div>
+          <div style="display: flex; flex-direction: column; line-height: 1.1;">
+            <span id="header-university-name" style="font-weight: 600; font-size: 0.85rem; color: var(--primary-700);">Đang tải...</span>
+            <span id="header-university-desc" style="font-size: 0.7rem; color: var(--text-secondary); max-width: 200px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;"></span>
+          </div>
+        </div>
+
+        <div id="realtime-clock" style="font-family: monospace; font-size: 0.95rem; font-weight: 500; color: var(--text-secondary); background: var(--bg-secondary); padding: 4px 12px; border-radius: var(--radius-full); margin-right: var(--space-4); display: flex; align-items: center; gap: 8px;">
+          <i class="far fa-clock"></i>
+          <span id="clock-time">--:--:--</span>
+          <span id="clock-date" style="font-size: 0.8rem; opacity: 0.8;">--/--/----</span>
+        </div>
+        <div class="search-global">
+          <i class="fas fa-search"></i>
+          <input type="text" id="global-search" list="search-suggestions" placeholder="Gợi ý: Nhập tên, lớp, môn học..." data-i18n-placeholder="search_placeholder">
+          <datalist id="search-suggestions">
+            <option data-i18n-value="search_opt_1" value="Sinh viên">
+            <option data-i18n-value="search_opt_2" value="Đăng ký môn học">
+            <option data-i18n-value="search_opt_3" value="Xem bảng điểm">
+            <option data-i18n-value="search_opt_4" value="Lịch học">
+            <option data-i18n-value="search_opt_5" value="Cài đặt tài khoản">
+          </datalist>
+        </div>
+      </div>
+      <div class="header-right">
+        <button class="btn-icon" id="btn-language" title="Switch Language">
+          <span class="lang-label">VI</span>
+        </button>
+        <button class="btn-icon" id="btn-theme" title="Toggle Theme">
+          <i class="fas fa-moon"></i>
+        </button>
+        <button class="btn-icon notification-btn" id="btn-helpdesk-top" title="Hỗ trợ cần xử lý" style="display: none;">
+          <i class="fas fa-bug"></i>
+          <span class="notification-badge" id="helpdesk-badge" style="background: var(--warning); display: none;">0</span>
+        </button>
+        <button class="btn-icon notification-btn" id="btn-notifications" title="Notifications">
+          <i class="fas fa-bell"></i>
+          <span class="notification-badge" id="notification-badge">0</span>
+        </button>
+      </div>
+    </header>
+
+    <!-- Page Content -->
+    <div id="main-content" class="app-content-container">
+      <!-- Views rendered here by router -->
+    </div>
+  </main>
+
+  <!-- Modal Container -->
+  <div class="modal-overlay" id="modal-overlay">
+    <div class="modal" id="modal">
+      <div class="modal-header">
+        <h3 class="modal-title" id="modal-title">Title</h3>
+        <button class="btn-icon modal-close" id="modal-close" title="Close">
+          <i class="fas fa-times"></i>
+        </button>
+      </div>
+      <div class="modal-body" id="modal-body"></div>
+      <div class="modal-footer" id="modal-footer"></div>
+    </div>
+  </div>
+
+  <!-- Toast Container -->
+  <div class="toast-container" id="toast-container"></div>
+
+  <!-- Chatbot Floating Button -->
+  <button class="chatbot-fab" id="chatbot-fab" title="Mở AI Assistant">
+    <span class="chatbot-fab-pulse"></span>
+    <span class="chatbot-fab-icon">
+      <svg viewBox="0 0 24 24" width="20" height="20" fill="none">
+        <path d="M21 11.5a8.38 8.38 0 01-.9 3.8 8.5 8.5 0 01-7.6 4.7 8.38 8.38 0 01-3.8-.9L3 21l1.9-5.7a8.38 8.38 0 01-.9-3.8 8.5 8.5 0 014.7-7.6 8.38 8.38 0 013.8-.9h.5a8.48 8.48 0 018 8v.5z" fill="currentColor" opacity="0.25"/>
+        <circle cx="9" cy="12" r="1.2" fill="currentColor"/>
+        <circle cx="12" cy="12" r="1.2" fill="currentColor"/>
+        <circle cx="15" cy="12" r="1.2" fill="currentColor"/>
+      </svg>
+    </span>
+    <span class="chatbot-fab-label">AI</span>
+  </button>
+
+  <!-- Scripts (order matters!) -->
+  <script src="{% static \'js/database.js\' %}"></script>
+  <script src="{% static \'js/auth.js\' %}"></script>
+  <script src="{% static \'js/utils.js\' %}"></script>
+  <script src="{% static \'js/components/LoginBackground.js\' %}"></script>
+  <script src="{% static \'js/views/login.js\' %}"></script>
+  <script src="{% static \'js/views/dashboard.js\' %}"></script>
+  <script src="{% static \'js/views/students.js\' %}"></script>
+  <script src="{% static \'js/views/teachers.js\' %}"></script>
+  <script src="{% static \'js/views/classes.js\' %}"></script>
+  <script src="{% static \'js/views/grades.js\' %}"></script>
+  <script src="{% static \'js/views/chatbot.js\' %}"></script>
+  <script src="{% static \'js/views/helpdesk.js\' %}"></script>
+  <script src="{% static \'js/views/workshop.js\' %}"></script>
+  <script src="{% static \'js/views/profile.js\' %}"></script>
+  <script src="{% static \'js/views/forgot_password.js\' %}"></script>
+  <script src="{% static \'js/views/registration.js\' %}"></script>
+  <script src="{% static \'js/views/tuition.js\' %}"></script>
+  <script src="{% static \'js/app.js\' %}"></script>
+</body>
+</html>

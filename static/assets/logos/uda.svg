@@ -1,0 +1,15 @@
+<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'>
+    <defs>
+        <linearGradient id="grad-uda" x1="0%" y1="0%" x2="100%" y2="100%">
+            <stop offset="0%" stop-color="#eab308" stop-opacity="0.2"/>
+            <stop offset="100%" stop-color="#eab308" stop-opacity="0.05"/>
+        </linearGradient>
+    </defs>
+    <rect width='100' height='100' rx='20' fill='url(#grad-uda)'/>
+    <g transform="translate(0, -10)">
+        <path d="M20 60 Q 50 20 80 60 Z" fill="#eab308" opacity="0.9"/><circle cx="50" cy="45" r="10" fill="#fff"/>
+    </g>
+    <text x='50' y='85' font-family='sans-serif' font-size='16' font-weight='800' fill='#eab308' text-anchor='middle' letter-spacing="1">
+        UDA
+    </text>
+</svg>
