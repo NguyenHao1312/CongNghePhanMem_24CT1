@@ -955,16 +955,16 @@ const ReviewApp = {
 
     // Login redirects
     loginBtn?.addEventListener('click', () => {
-      window.location.href = 'index.html#/login';
+      window.location.href = '/#/login';
     });
     headerLogin?.addEventListener('click', () => {
-      window.location.href = 'index.html#/login';
+      window.location.href = '/#/login';
     });
     headerSignup?.addEventListener('click', () => {
-      window.location.href = 'index.html#/login';
+      window.location.href = '/#/login';
     });
     watermarkLogin?.addEventListener('click', () => {
-      window.location.href = 'index.html#/login';
+      window.location.href = '/#/login';
     });
 
     // Keyboard escape to close modal

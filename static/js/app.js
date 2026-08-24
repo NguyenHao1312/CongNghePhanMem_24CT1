@@ -1017,7 +1017,7 @@ const App = {
       if (window.location.hash === '#/login') {
         if (routes['#/login']) routes['#/login']();
       } else {
-        window.location.href = 'review.html';
+        window.location.href = '/review/';
       }
       return;
     }
@@ -1248,7 +1248,7 @@ const App = {
 
   navigate(hash) {
     if (!Auth.isLoggedIn() && hash !== '#/login') {
-      window.location.href = 'review.html';
+      window.location.href = '/review/';
       return;
     }
 
