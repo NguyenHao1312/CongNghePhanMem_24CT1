@@ -442,7 +442,7 @@ const ReviewApp = {
             <div class="rv-news-content" style="flex: 1; display: flex; flex-direction: column;">
               <div class="rv-news-title" style="font-size: 1.15rem; color: var(--primary-600); display: flex; align-items: center; gap: 8px;">
                 <div style="width: 36px; height: 36px; border-radius: 8px; overflow: hidden; display: flex; justify-content: center; align-items: center; flex-shrink: 0; background: var(--bg-secondary);">
-                  <img src="assets/logos/${u.shortName.toLowerCase()}.svg" alt="${u.shortName}" style="width: 100%; height: 100%; object-fit: cover;" onerror="this.onerror=null; this.parentElement.innerHTML='<i class=\\'fas fa-university\\' style=\\'color:var(--primary-500); font-size: 1rem;\\'></i>';">
+                  <img src="assets/logos/${u.shortName.toLowerCase()}.${u.shortName.toLowerCase() === 'ued' ? 'jpg' : 'png'}" alt="${u.shortName}" style="width: 100%; height: 100%; object-fit: contain; padding: 2px; box-sizing: border-box;" onerror="this.onerror=null; this.parentElement.innerHTML='<i class=\\'fas fa-university\\' style=\\'color:var(--primary-500); font-size: 1rem;\\'></i>';">
                 </div>
                 ${this.t(u.name)}
               </div>
@@ -955,16 +955,16 @@ const ReviewApp = {
 
     // Login redirects
     loginBtn?.addEventListener('click', () => {
-      window.location.href = 'index.html#/login';
+      window.location.href = '/#/login';
     });
     headerLogin?.addEventListener('click', () => {
-      window.location.href = 'index.html#/login';
+      window.location.href = '/#/login';
     });
     headerSignup?.addEventListener('click', () => {
-      window.location.href = 'index.html#/login';
+      window.location.href = '/#/login';
     });
     watermarkLogin?.addEventListener('click', () => {
-      window.location.href = 'index.html#/login';
+      window.location.href = '/#/login';
     });
 
     // Keyboard escape to close modal

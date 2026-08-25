@@ -1017,7 +1017,7 @@ const App = {
       if (window.location.hash === '#/login') {
         if (routes['#/login']) routes['#/login']();
       } else {
-        window.location.href = 'review.html';
+        window.location.href = '/review/';
       }
       return;
     }
@@ -1106,6 +1106,10 @@ const App = {
         uniDisplay.style.display = 'flex';
         if (uniNameEl) uniNameEl.textContent = t(uni.name);
         if (uniDescEl) uniDescEl.textContent = t(uni.desc);
+        const uniLogoContainer = document.getElementById('header-university-logo');
+        if (uniLogoContainer) {
+          uniLogoContainer.innerHTML = `<span style="font-weight: 700; color: var(--primary-600); font-size: 0.75rem;">${uni.shortName}</span>`;
+        }
       }
     } else if (uniDisplay && user.role === 'admin') {
       // Admin might have null universityId, they manage everything
@@ -1248,7 +1252,7 @@ const App = {
 
   navigate(hash) {
     if (!Auth.isLoggedIn() && hash !== '#/login') {
-      window.location.href = 'review.html';
+      window.location.href = '/review/';
       return;
     }
 

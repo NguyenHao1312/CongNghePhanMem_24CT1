@@ -207,7 +207,7 @@ const LoginView = {
             <div class="form-group" id="login-university-group" style="margin-bottom: 0.75rem;">
               <label for="login-university" data-i18n="selectUniversityLabel">Chọn trường Đại học</label>
               <div class="input-group" style="display: flex; align-items: center; background: var(--bg-primary); border: 1.5px solid var(--border-color); border-radius: var(--radius-md); overflow: hidden;">
-                <span class="input-group-text" style="padding: 10px 15px; color: var(--text-tertiary); background: transparent; border: none;"><i class="fas fa-university"></i></span>
+                <span class="input-group-text" id="login-uni-icon" style="padding: 10px 15px; color: var(--text-tertiary); background: transparent; border: none; width: 44px; display: flex; justify-content: center;"><i class="fas fa-university"></i></span>
                 <select id="login-university" class="form-control" style="border: none; outline: none; box-shadow: none; width: 100%; padding: 12px 10px; background: transparent; color: var(--text-primary);">
                   <!-- Populated by JS -->
                 </select>
@@ -258,7 +258,7 @@ const LoginView = {
             <div class="form-group" style="margin-bottom: 0.75rem;">
               <label for="signup-university" data-i18n="selectUniversityLabel">Chọn trường Đại học</label>
               <div class="input-group" style="display: flex; align-items: center; background: var(--bg-primary); border: 1.5px solid var(--border-color); border-radius: var(--radius-md); overflow: hidden;">
-                <span class="input-group-text" style="padding: 10px 15px; color: var(--text-tertiary); background: transparent; border: none;"><i class="fas fa-university"></i></span>
+                <span class="input-group-text" id="signup-uni-icon" style="padding: 10px 15px; color: var(--text-tertiary); background: transparent; border: none; width: 44px; display: flex; justify-content: center;"><i class="fas fa-university"></i></span>
                 <select id="signup-university" class="form-control" style="border: none; outline: none; box-shadow: none; width: 100%; padding: 12px 10px; background: transparent; color: var(--text-primary);">
                   <!-- Populated by JS -->
                 </select>
@@ -632,13 +632,41 @@ const LoginView = {
         signupInput.value = prefix;
       }
     };
+
+    const updateUniIcon = (selectId, iconId) => {
+      const select = document.getElementById(selectId);
+      const iconSpan = document.getElementById(iconId);
+      if (!select || !iconSpan) return;
+      const uniId = parseInt(select.value);
+      const uni = Database.UNIVERSITIES.find(u => u.id === uniId);
+      if (uni) {
+        iconSpan.innerHTML = `<span style="font-weight: 700; color: var(--text-tertiary); font-size: 0.8rem;">${uni.shortName}</span>`;
+      } else {
+        iconSpan.innerHTML = `<i class="fas fa-university"></i>`;
+      }
+    };
     
     if (signupInput) {
       if (signupUniSelect) {
-        signupUniSelect.addEventListener('change', updatePrefix);
+        signupUniSelect.addEventListener('change', () => {
+          updatePrefix();
+          updateUniIcon('signup-university', 'signup-uni-icon');
+        });
       }
       signupInput.addEventListener('input', updatePrefix);
       updatePrefix(); // Initialize prefix on load
+    }
+    
+    const loginUniSelect = document.getElementById('login-university');
+    if (loginUniSelect) {
+      loginUniSelect.addEventListener('change', () => {
+        updateUniIcon('login-university', 'login-uni-icon');
+      });
+      // Delay initialization slightly to let universities populate
+      setTimeout(() => {
+        updateUniIcon('login-university', 'login-uni-icon');
+        updateUniIcon('signup-university', 'signup-uni-icon');
+      }, 100);
     }
 
     tabs.forEach(tab => {
