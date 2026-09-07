@@ -129,3 +129,8 @@ MAILERS = {
         'BACKEND': 'django.core.mail.backends.console.EmailBackend',
     },
 }
+
+STATIC_URL = 'static/'
+
+# Khai báo nơi gom file tĩnh khi chạy lệnh collectstatic trên server
+STATIC_ROOT = BASE_DIR / 'staticfiles'
