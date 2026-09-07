@@ -25,7 +25,10 @@ SECRET_KEY = 'django-insecure-k2-ap(nb_1tf1we0+!$a)k11eg0as#rbx_duzr47dd9disue4%
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = []
+# Apply for production deployment Render.com
+ALLOWED_HOSTS = ['unims-ade3.onrender.com', 'localhost', '127.0.0.1']
+# Apply for all hosts in production deployment Render.com
+# ALLOWED_HOSTS = [*]
 
 
 # Application definition
