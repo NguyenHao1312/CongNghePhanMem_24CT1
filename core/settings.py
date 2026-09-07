@@ -45,6 +45,7 @@ INSTALLED_APPS = [
 
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
+    'whitenoise.middleware.WhiteNoiseMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
     'django.middleware.common.CommonMiddleware',
     'django.middleware.csrf.CsrfViewMiddleware',
@@ -133,7 +134,13 @@ MAILERS = {
     },
 }
 
-STATIC_URL = 'static/'
+# Đảm bảo có dấu gạch chéo ở cả 2 đầu
+STATIC_URL = '/static/'
 
-# Khai báo nơi gom file tĩnh khi chạy lệnh collectstatic trên server
+# Chỉ cho Django biết thư mục static gốc đang nằm ở đâu
+STATICFILES_DIRS = [
+    BASE_DIR / 'static',
+]
+
+# Nơi Render sẽ gom toàn bộ file lại khi chạy lệnh collectstatic
 STATIC_ROOT = BASE_DIR / 'staticfiles'
