@@ -345,6 +345,14 @@ window.LoginBackground = class {
           }
         } else {
           // Bouncy physics for Fruits, Unis, and Asteroids
+          // Fluid friction (dampening)
+          b.vx *= 0.995;
+          b.vy *= 0.995;
+          
+          // Brownian motion / Wind drift for natural acceleration
+          b.vx += (Math.random() - 0.5) * 0.05;
+          b.vy += (Math.random() - 0.5) * 0.05;
+
           b.x += b.vx;
           b.y += b.vy;
           b.rotation += b.rotSpeed;
@@ -366,61 +374,75 @@ window.LoginBackground = class {
         b.squash = 1;
       }
 
-      // Block collision (Enable for all, but treat planets differently)
+      // Block collision (Elastic Circular Collision)
       for (let j = i + 1; j < this.blocks.length; j++) {
         const b2 = this.blocks[j];
         if (b.isDragging || b2.isDragging) continue;
 
-        const overlapX = (b.x + b.w > b2.x) && (b.x < b2.x + b2.w);
-        const overlapY = (b.y + b.h > b2.y) && (b.y < b2.y + b2.h);
+        const cx1 = b.x + b.w / 2; const cy1 = b.y + b.h / 2;
+        const cx2 = b2.x + b2.w / 2; const cy2 = b2.y + b2.h / 2;
+        const dx = cx2 - cx1;
+        const dy = cy2 - cy1;
+        const dist = Math.sqrt(dx * dx + dy * dy);
+        const minDist = (b.w + b2.w) / 2;
 
-        if (overlapX && overlapY) {
+        if (dist < minDist && dist > 0) {
           // Planets don't collide with each other
           if (b.isPlanet && b2.isPlanet) continue;
 
-          const isAst = b.isAsteroid || b2.isAsteroid;
-          const dampen = isAst ? 0.6 : 0.85; 
-          const speedLimit = isAst ? 2.5 : 8; // Asteroids are very slow
-          
-          // If one is a planet, it acts as a heavy wall
-          if (b.isPlanet || b2.isPlanet) {
-            const heavy = b.isPlanet ? b : b2;
-            const light = b.isPlanet ? b2 : b;
-            
-            // Light object bounces off heavy object slowly
-            light.vx *= -dampen;
-            light.vy *= -dampen;
-            
-            // Push light object away to prevent sticking
-            const cx1 = heavy.x + heavy.w / 2; const cy1 = heavy.y + heavy.h / 2;
-            const cx2 = light.x + light.w / 2; const cy2 = light.y + light.h / 2;
-            const dx = cx2 - cx1; const dy = cy2 - cy1;
-            const dist = Math.sqrt(dx * dx + dy * dy) || 1;
-            light.x += (dx / dist) * 3;
-            light.y += (dy / dist) * 3;
-            light.flash = 12;
-          } else {
-            // Normal elastic collision with slow down
-            const newBx = Math.max(-speedLimit, Math.min(speedLimit, b2.vx * dampen));
-            const newBy = Math.max(-speedLimit, Math.min(speedLimit, b2.vy * dampen));
-            const newB2x = Math.max(-speedLimit, Math.min(speedLimit, b.vx * dampen));
-            const newB2y = Math.max(-speedLimit, Math.min(speedLimit, b.vy * dampen));
-            
-            b.vx = newBx || (Math.random() - 0.5);
-            b.vy = newBy || (Math.random() - 0.5);
-            b2.vx = newB2x || (Math.random() - 0.5);
-            b2.vy = newB2y || (Math.random() - 0.5);
+          // Normalize vector
+          const nx = dx / dist;
+          const ny = dy / dist;
 
-            const cx1 = b.x + b.w / 2; const cy1 = b.y + b.h / 2;
-            const cx2 = b2.x + b2.w / 2; const cy2 = b2.y + b2.h / 2;
-            const dx = cx2 - cx1; const dy = cy2 - cy1;
-            const dist = Math.sqrt(dx * dx + dy * dy) || 1;
-            const push = isAst ? 1.5 : 2.5;
-            b.x -= (dx / dist) * push; b.y -= (dy / dist) * push;
-            b2.x += (dx / dist) * push; b2.y += (dy / dist) * push;
+          // Relative velocity
+          const dvx = b.vx - b2.vx;
+          const dvy = b.vy - b2.vy;
+          const dotProduct = dvx * nx + dvy * ny;
 
-            b.flash = 12; b2.flash = 12;
+          // Only resolve if moving towards each other
+          if (dotProduct > 0) {
+            const isAst = b.isAsteroid || b2.isAsteroid;
+            const restitution = isAst ? 0.5 : 0.9; // Bounciness
+            
+            // Mass proportional to area (w^2)
+            const m1 = b.w * b.w;
+            const m2 = b2.w * b2.w;
+            const mTotal = m1 + m2;
+            
+            if (b.isPlanet || b2.isPlanet) {
+              const heavy = b.isPlanet ? b : b2;
+              const light = b.isPlanet ? b2 : b;
+              
+              // Light object bounces off heavy object
+              const lnx = light === b ? nx : -nx;
+              const lny = light === b ? ny : -ny;
+              const lightV = light.vx * lnx + light.vy * lny;
+              
+              light.vx -= 2 * lightV * lnx * restitution;
+              light.vy -= 2 * lightV * lny * restitution;
+              light.flash = 12;
+            } else {
+              // 1D elastic collision along normal
+              const impulse = (2 * dotProduct) / mTotal;
+              
+              b.vx -= impulse * m2 * nx * restitution;
+              b.vy -= impulse * m2 * ny * restitution;
+              b2.vx += impulse * m1 * nx * restitution;
+              b2.vy += impulse * m1 * ny * restitution;
+              
+              // Apply squashing effect
+              b.squash = 1.15;
+              b2.squash = 1.15;
+              b.flash = 12; b2.flash = 12;
+            }
           }
+
+          // Positional correction to prevent sticking
+          const overlap = minDist - dist;
+          const correctionX = nx * (overlap / 2) * 0.5;
+          const correctionY = ny * (overlap / 2) * 0.5;
+          if (!b.isPlanet) { b.x -= correctionX; b.y -= correctionY; }
+          if (!b2.isPlanet) { b2.x += correctionX; b2.y += correctionY; }
         }
       }
 
