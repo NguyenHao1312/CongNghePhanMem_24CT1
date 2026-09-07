@@ -244,13 +244,32 @@ html, body {
 
 /* === NEWS GRID === */
 .rv-news-grid {
-  display: grid;
-  grid-template-columns: repeat(3, 1fr);
+  display: flex;
+  overflow-x: auto;
   gap: var(--space-4);
   margin-bottom: var(--space-5);
+  padding-bottom: var(--space-3);
+  scroll-snap-type: x mandatory;
+  scroll-behavior: smooth;
+  -webkit-overflow-scrolling: touch;
 }
-
+.rv-news-grid::-webkit-scrollbar {
+  height: 8px;
+}
+.rv-news-grid::-webkit-scrollbar-track {
+  background: var(--bg-tertiary);
+  border-radius: 4px;
+}
+.rv-news-grid::-webkit-scrollbar-thumb {
+  background: var(--primary-300);
+  border-radius: 4px;
+}
+.rv-news-grid::-webkit-scrollbar-thumb:hover {
+  background: var(--primary-400);
+}
 .rv-news-card {
+  flex: 0 0 calc(33.333% - 11px);
+  scroll-snap-align: start;
   background: rgba(255, 255, 255, 0.7);
   backdrop-filter: blur(10px);
   border: 1px solid var(--border-color);
@@ -259,7 +278,6 @@ html, body {
   box-shadow: 0 4px 15px rgba(0,0,0,0.03);
   cursor: pointer;
   transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-  animation: rvFadeInUp 0.5s ease backwards;
 }
 body.dark-mode .rv-news-card {
   background: rgba(30, 41, 59, 0.7);

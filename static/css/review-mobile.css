@@ -8,9 +8,8 @@ html, body {
 }
 
 /* Base Mobile Overrides (from max-width: 768px & 1024px) */
-.rv-news-grid {
-  grid-template-columns: repeat(2, 1fr);
-  gap: var(--space-3);
+.rv-news-card {
+  flex: 0 0 calc(85% - 10px); /* Show one card + a bit of next on mobile */
 }
 
 .review-content {
