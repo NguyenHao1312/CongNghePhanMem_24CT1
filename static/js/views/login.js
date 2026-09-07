@@ -1,34 +1,34 @@
 // login.js
 const I18N = {
   vi: {
-    subtitle: 'Hệ thống Quản lý Đại học Thông minh',
+    subtitle: '<mark style="background: transparent; color: var(--primary-600); font-weight: 800; padding: 0;">Hệ thống Quản lý</mark> Đại học Thông minh',
     roleStudent: '<i class="fas fa-user-graduate" style="margin-right: 6px;"></i> Sinh viên',
     roleTeacher: '<i class="fas fa-chalkboard-teacher" style="margin-right: 6px;"></i> Giáo viên',
-    loginUsernameLabel: 'Mã sinh viên / giáo viên',
-    loginUsernamePlaceholder: 'Nhập mã số...',
-    loginPasswordLabel: 'Mật khẩu',
+    loginUsernameLabel: '<span style="color: #0f172a; font-weight: 700;">Mã số</span> (Sinh viên / Giáo viên)',
+    loginUsernamePlaceholder: 'Nhập mã số của bạn...',
+    loginPasswordLabel: '<span style="color: #0f172a; font-weight: 700;">Mật khẩu</span>',
     loginPasswordPlaceholder: 'Nhập mật khẩu...',
-    rememberMe: ' Ghi nhớ đăng nhập',
-    forgotPassword: 'Quên mật khẩu?',
+    rememberMe: ' <span style="color: #1e293b; font-weight: 500;">Ghi nhớ đăng nhập</span>',
+    forgotPassword: '<span style="color: var(--primary-600); font-weight: 600;">Quên mật khẩu?</span>',
     btnLogin: 'Đăng nhập <i class="fas fa-sign-in-alt" style="margin-left: 8px;"></i>',
-    notHaveAccount: 'Chưa có tài khoản? <span style="color: var(--primary-500); font-weight: 600;">Tạo tài khoản</span>',
-    signupUsernameLabel: 'Mã số (Sinh viên / Giáo viên)',
+    notHaveAccount: 'Chưa có tài khoản? <span style="color: var(--primary-600); font-weight: 700;">Tạo tài khoản</span>',
+    signupUsernameLabel: '<span style="color: #0f172a; font-weight: 700;">Mã số</span> (Sinh viên / Giáo viên)',
     signupUsernamePlaceholder: 'Nhập mã số của bạn...',
-    signupNameLabel: 'Họ và tên',
+    signupNameLabel: '<span style="color: #0f172a; font-weight: 700;">Họ và tên</span>',
     signupNamePlaceholder: 'Họ và tên đầy đủ...',
-    signupPasswordLabel: 'Mật khẩu',
+    signupPasswordLabel: '<span style="color: #0f172a; font-weight: 700;">Mật khẩu</span>',
     signupPasswordPlaceholder: 'Tạo mật khẩu...',
     btnSignup: 'Đăng ký <i class="fas fa-user-plus" style="margin-left: 8px;"></i>',
-    alreadyHaveAccount: 'Đã có tài khoản? <span style="color: var(--primary-500); font-weight: 600;">Đăng nhập</span>',
+    alreadyHaveAccount: 'Đã có tài khoản? <span style="color: var(--primary-600); font-weight: 700;">Đăng nhập</span>',
     footer: '&copy; 2026 UniMS - University Management System',
     themePixel: '<i class="fas fa-apple-alt" style="margin-right: 8px;"></i>Trái cây Pixel',
     themeSolar: '<i class="fas fa-globe" style="margin-right: 8px;"></i>Hệ mặt trời',
     themeUni: '<i class="fas fa-university" style="margin-right: 8px;"></i>Đại học Đà Nẵng',
     colorDefault: '<i class="fas fa-tint" style="margin-right: 8px; color: #2563eb;"></i>Mặc định',
-    colorJade: '<i class="fas fa-leaf" style="margin-right: 8px; color: #14b8a6;"></i>Xanh ngọc bích',
+    colorJade: '<i class="fas fa-water" style="margin-right: 8px; color: #3b82f6;"></i>Xanh đơn sắc',
     colorBlack: '<i class="fas fa-moon" style="margin-right: 8px; color: #334155;"></i>Đen tuyền',
     colorWhite: '<i class="fas fa-sun" style="margin-right: 8px; color: #cbd5e1;"></i>Trắng xóa',
-    selectUniversityLabel: 'Chọn trường Đại học',
+    selectUniversityLabel: '<span style="color: #0f172a; font-weight: 700;">Trường Đại học</span>',
     selectUniversityPlaceholder: '-- Chọn trường của bạn --'
   },
   en: {
@@ -56,7 +56,7 @@ const I18N = {
     themeSolar: '<i class="fas fa-globe" style="margin-right: 8px;"></i>Solar System',
     themeUni: '<i class="fas fa-university" style="margin-right: 8px;"></i>Da Nang Universities',
     colorDefault: '<i class="fas fa-tint" style="margin-right: 8px; color: #2563eb;"></i>Default',
-    colorJade: '<i class="fas fa-leaf" style="margin-right: 8px; color: #14b8a6;"></i>Jade Green',
+    colorJade: '<i class="fas fa-water" style="margin-right: 8px; color: #3b82f6;"></i>Monochromatic Blue',
     colorBlack: '<i class="fas fa-moon" style="margin-right: 8px; color: #334155;"></i>Pitch Black',
     colorWhite: '<i class="fas fa-sun" style="margin-right: 8px; color: #cbd5e1;"></i>Pure White',
     selectUniversityLabel: 'Select University',
@@ -128,40 +128,45 @@ const LoginView = {
           #unims-login-container select option { background-color: var(--bg-primary); color: var(--text-primary); }
         </style>
         <!-- Animated Background Particles -->
-        <div class="login-particles" id="login-particles"></div>
-        <!-- Bouncing Blocks Canvas -->
         <canvas id="bounce-canvas" style="position: absolute; top: 0; left: 0; width: 100%; height: 100%; pointer-events: auto; touch-action: none; z-index: 0;"></canvas>
         
         <!-- Theme Switcher -->
         <style>
           .theme-option:hover { background: rgba(0,0,0,0.05) !important; }
           .dropdown-btn:hover { transform: scale(1.1); }
+          .login-top-btn { width: 42px; height: 42px; border-radius: 50%; background: rgba(255,255,255,0.85); border: 1px solid rgba(0,0,0,0.1); cursor: pointer; display: flex; justify-content: center; align-items: center; box-shadow: 0 4px 10px rgba(0,0,0,0.1); font-size: 1.1rem; transition: transform 0.2s, background 0.2s; }
+          .login-top-btn:hover { background: #ffffff; transform: scale(1.1); }
         </style>
+        
+        <!-- Back to Review Button (Top Left) -->
+        <a href="/review/" class="login-top-btn" title="Quay lại trang Review" style="position: absolute; top: var(--space-4); left: var(--space-4); color: #1e293b; text-decoration: none; z-index: 10;">
+          <i class="fas fa-arrow-left"></i>
+        </a>
+
         <div id="login-theme-switcher" class="login-theme-switcher">
-          <!-- Hide Form Button -->
-          <button id="btn-toggle-form" title="Ẩn/Hiện Form để chơi đùa" style="width: 42px; height: 42px; border-radius: 50%; background: rgba(255,255,255,0.85); border: 1px solid rgba(0,0,0,0.1); cursor: pointer; display: flex; justify-content: center; align-items: center; box-shadow: 0 4px 10px rgba(0,0,0,0.1); color: #ef4444; font-size: 1.1rem; transition: transform 0.2s;">
+          <button id="btn-toggle-form" title="Ẩn/Hiện Form để chơi đùa" class="login-top-btn" style="color: #ef4444;">
             <i class="fas fa-eye-slash" id="icon-toggle-form"></i>
           </button>
           <!-- Icon Theme Dropdown -->
           <div style="position: relative;" class="custom-dropdown">
-            <button class="dropdown-btn" id="btn-icon-theme" title="Thay đổi icon" style="width: 42px; height: 42px; border-radius: 50%; background: rgba(255,255,255,0.85); border: 1px solid rgba(0,0,0,0.1); cursor: pointer; display: flex; justify-content: center; align-items: center; box-shadow: 0 4px 10px rgba(0,0,0,0.1); color: #1e293b; font-size: 1.1rem; transition: transform 0.2s;">
+            <button class="dropdown-btn login-top-btn" id="btn-icon-theme" title="Thay đổi icon" style="color: #1e293b;">
               <i class="fas fa-shapes"></i>
             </button>
             <div id="menu-icon-theme" style="display: none; position: absolute; right: 0; top: 115%; background: rgba(255,255,255,0.95); border-radius: var(--radius-md); box-shadow: 0 4px 15px rgba(0,0,0,0.15); min-width: 170px; overflow: hidden; border: 1px solid rgba(0,0,0,0.05); padding: 5px 0; backdrop-filter: blur(10px);">
               <div class="theme-option" data-theme-type="icon" data-value="fruits" data-i18n="themePixel" style="padding: 10px 15px; cursor: pointer; font-size: 0.9rem; color: #1e293b; font-weight: 500;"><i class="fas fa-apple-alt" style="margin-right: 8px;"></i>Trái cây Pixel</div>
               <div class="theme-option" data-theme-type="icon" data-value="planets" data-i18n="themeSolar" style="padding: 10px 15px; cursor: pointer; font-size: 0.9rem; color: #1e293b; font-weight: 500;"><i class="fas fa-globe" style="margin-right: 8px;"></i>Hệ mặt trời</div>
-              <div class="theme-option" data-theme-type="icon" data-value="unis" data-i18n="themeUni" style="padding: 10px 15px; cursor: pointer; font-size: 0.9rem; color: #1e293b; font-weight: 500;"><i class="fas fa-university" style="margin-right: 8px;"></i>Đại học Đà Nẵng</div>
+              <div class="theme-option" data-theme-type="icon" data-value="unis" data-i18n="themeUni" style="padding: 10px 15px; cursor: pointer; font-size: 0.9rem; color: #1e293b; font-weight: 500; background: rgba(0,0,0,0.05);"><i class="fas fa-university" style="margin-right: 8px;"></i>Đại học Đà Nẵng ✓</div>
             </div>
           </div>
           <!-- Color Theme Dropdown (3 colors: Jade default, Black, White) -->
           <div style="position: relative;" class="custom-dropdown">
-            <button class="dropdown-btn" id="btn-color-theme" title="Thay đổi màu nền" style="width: 42px; height: 42px; border-radius: 50%; background: rgba(255,255,255,0.85); border: 2px solid #14b8a6; cursor: pointer; display: flex; justify-content: center; align-items: center; box-shadow: 0 4px 10px rgba(0,0,0,0.1); color: #0d9488; font-size: 1.1rem; transition: transform 0.2s;">
+            <button class="dropdown-btn login-top-btn" id="btn-color-theme" title="Thay đổi màu nền" style="border: 2px solid #3b82f6; color: #1e40af;">
               <i class="fas fa-palette"></i>
             </button>
             <div id="menu-color-theme" style="display: none; position: absolute; right: 0; top: 115%; background: rgba(255,255,255,0.97); border-radius: 12px; box-shadow: 0 8px 24px rgba(0,0,0,0.15); min-width: 190px; overflow: hidden; border: 1px solid rgba(0,0,0,0.06); padding: 6px; backdrop-filter: blur(12px);">
-              <div class="theme-option active-color" data-theme-type="color" data-value="jade" style="padding: 10px 14px; cursor: pointer; font-size: 0.88rem; color: #1e293b; font-weight: 600; border-radius: 8px; display: flex; align-items: center; gap: 10px; background: rgba(20,184,166,0.08);">
-                <span style="width: 18px; height: 18px; border-radius: 50%; background: linear-gradient(135deg,#0d9488,#14b8a6); flex-shrink:0; box-shadow:0 2px 6px rgba(13,148,136,0.4); border: 2px solid rgba(255,255,255,0.6);"></span>
-                <span data-i18n="colorJade">Xanh ngọc bích ✓</span>
+              <div class="theme-option active-color" data-theme-type="color" data-value="jade" style="padding: 10px 14px; cursor: pointer; font-size: 0.88rem; color: #1e293b; font-weight: 600; border-radius: 8px; display: flex; align-items: center; gap: 10px; background: rgba(59,130,246,0.08);">
+                <span style="width: 18px; height: 18px; border-radius: 50%; background: linear-gradient(135deg,#1e40af,#3b82f6); flex-shrink:0; box-shadow:0 2px 6px rgba(59,130,246,0.4); border: 2px solid rgba(255,255,255,0.6);"></span>
+                <span data-i18n="colorJade">Xanh đơn sắc ✓</span>
               </div>
               <div class="theme-option" data-theme-type="color" data-value="black" style="padding: 10px 14px; cursor: pointer; font-size: 0.88rem; color: #1e293b; font-weight: 500; border-radius: 8px; display: flex; align-items: center; gap: 10px;">
                 <span style="width: 18px; height: 18px; border-radius: 50%; background: linear-gradient(135deg,#0f172a,#334155); flex-shrink:0; box-shadow:0 2px 6px rgba(0,0,0,0.3); border: 2px solid rgba(255,255,255,0.6);"></span>
@@ -175,7 +180,7 @@ const LoginView = {
           </div>
           <!-- Language Dropdown -->
           <div style="position: relative;" class="custom-dropdown">
-            <button class="dropdown-btn" id="btn-lang-theme" title="Ngôn ngữ / Language" style="width: 42px; height: 42px; border-radius: 50%; background: rgba(255,255,255,0.85); border: 1px solid rgba(0,0,0,0.1); cursor: pointer; display: flex; justify-content: center; align-items: center; box-shadow: 0 4px 10px rgba(0,0,0,0.1); color: #1e293b; font-size: 1.1rem; transition: transform 0.2s; font-weight: 700; font-family: sans-serif;">
+            <button class="dropdown-btn login-top-btn" id="btn-lang-theme" title="Ngôn ngữ / Language" style="color: #1e293b; font-weight: 700; font-family: sans-serif;">
               VN
             </button>
             <div id="menu-lang-theme" style="display: none; position: absolute; right: 0; top: 115%; background: rgba(255,255,255,0.95); border-radius: var(--radius-md); box-shadow: 0 4px 15px rgba(0,0,0,0.15); min-width: 140px; overflow: hidden; border: 1px solid rgba(0,0,0,0.05); padding: 5px 0; backdrop-filter: blur(10px);">
@@ -313,8 +318,6 @@ const LoginView = {
 
     document.body.appendChild(loginContainer);
 
-    this.createParticles();
-    
     // Initialize new Physics Engine
     if (window.LoginBackground) {
       this.bgEngine = new window.LoginBackground('bounce-canvas');
@@ -324,8 +327,11 @@ const LoginView = {
     this.bindEvents();
     this.initTranslations();
 
-    // ✅ Apply Jade (Teal) as default background immediately
-    loginContainer.style.background = 'linear-gradient(135deg, #042f2e 0%, #0d9488 40%, #1d4ed8 80%, #0f172a 100%)';
+    // Default style overrides for login bg
+    const loginContainerStyle = document.querySelector('.login-container');
+    if (loginContainerStyle) {
+      loginContainerStyle.style.background = 'linear-gradient(135deg, #1e40af 0%, #2563eb 40%, #3b82f6 80%, #93c5fd 100%)';
+    }
 
     // ✅ Auto-focus on username field
     setTimeout(() => {
@@ -540,19 +546,19 @@ const LoginView = {
 
     const loginContainerElem = document.getElementById('unims-login-container');
     
-    // Crossfade background helper
-    const crossfadeBackground = (newGradient, isDark) => {
-      let bgLayer = document.getElementById('bg-color-layer');
-      if (!bgLayer) {
-        bgLayer = document.createElement('div');
-        bgLayer.id = 'bg-color-layer';
-        bgLayer.style.cssText = 'position: absolute; top: 0; left: 0; width: 100%; height: 100%; z-index: -2; opacity: 0; transition: opacity 2s ease-in-out;';
-        loginContainerElem.insertBefore(bgLayer, loginContainerElem.firstChild);
-      }
-      
-      const newLayer = document.createElement('div');
-      newLayer.style.cssText = `position: absolute; top: 0; left: 0; width: 100%; height: 100%; z-index: -1; opacity: 0; transition: opacity 2s ease-in-out; background: ${newGradient};`;
-      loginContainerElem.insertBefore(newLayer, bgLayer.nextSibling);
+      // Crossfade background helper
+      const crossfadeBackground = (newGradient, isDark) => {
+        let bgLayer = document.getElementById('bg-color-layer');
+        if (!bgLayer) {
+          bgLayer = document.createElement('div');
+          bgLayer.id = 'bg-color-layer';
+          bgLayer.style.cssText = 'position: fixed; top: 0; left: 0; width: 100vw; height: 100vh; z-index: -2; opacity: 0; transition: opacity 2s ease-in-out; pointer-events: none;';
+          loginContainerElem.insertBefore(bgLayer, loginContainerElem.firstChild);
+        }
+        
+        const newLayer = document.createElement('div');
+        newLayer.style.cssText = `position: fixed; top: 0; left: 0; width: 100vw; height: 100vh; z-index: -1; opacity: 0; transition: opacity 2s ease-in-out; background: ${newGradient}; pointer-events: none;`;
+        loginContainerElem.insertBefore(newLayer, bgLayer.nextSibling);
       
       // Trigger reflow
       newLayer.offsetHeight; 
@@ -585,25 +591,32 @@ const LoginView = {
           document.querySelectorAll('#menu-color-theme .theme-option').forEach(o => {
             o.style.background = '';
             o.style.fontWeight = '500';
+            o.classList.remove('active-color');
             const label = o.querySelector('span:last-child');
             if (label) label.textContent = label.textContent.replace(' ✓', '');
           });
-          opt.style.background = 'rgba(0,0,0,0.05)';
+          opt.style.background = 'rgba(59,130,246,0.08)';
           opt.style.fontWeight = '600';
+          opt.classList.add('active-color');
           const activeLabel = opt.querySelector('span:last-child');
           if (activeLabel && !activeLabel.textContent.includes('✓')) {
             activeLabel.textContent += ' ✓';
           }
 
           const colorBtn = document.getElementById('btn-color-theme');
+          const colorThemeCircle = document.getElementById('active-color-circle');
           if (val === 'jade') {
-            crossfadeBackground('linear-gradient(135deg, #042f2e 0%, #0d9488 40%, #1d4ed8 80%, #0f172a 100%)', false);
-            if (colorBtn) { colorBtn.style.borderColor = '#14b8a6'; colorBtn.style.color = '#0d9488'; }
+            crossfadeBackground('linear-gradient(135deg, #1e40af 0%, #2563eb 40%, #3b82f6 80%, #93c5fd 100%)', false);
+            if (colorBtn) { colorBtn.style.borderColor = '#3b82f6'; colorBtn.style.color = '#1e40af'; }
+            if (colorThemeCircle) {
+               colorThemeCircle.style.background = 'linear-gradient(135deg, #1e40af, #3b82f6)';
+               colorThemeCircle.style.boxShadow = '0 2px 6px rgba(59,130,246,0.4)';
+            }
           } else if (val === 'black') {
-            crossfadeBackground('linear-gradient(135deg, #1e293b 0%, #0f172a 50%, #334155 100%)', true);
+            crossfadeBackground('linear-gradient(135deg, #020617 0%, #0f172a 50%, #1e293b 100%)', true);
             if (colorBtn) { colorBtn.style.borderColor = '#64748b'; colorBtn.style.color = '#475569'; }
           } else if (val === 'white') {
-            crossfadeBackground('linear-gradient(135deg, #ffffff 0%, #f1f5f9 50%, #e2e8f0 100%)', false);
+            crossfadeBackground('linear-gradient(135deg, #ffffff 0%, #f8fafc 50%, #e2e8f0 100%)', false);
             if (colorBtn) { colorBtn.style.borderColor = '#94a3b8'; colorBtn.style.color = '#64748b'; }
           }
         }
@@ -966,9 +979,9 @@ const LoginView = {
           if (result.success) {
             const rememberMe = document.getElementById('remember-me').checked;
             if (rememberMe) {
-               localStorage.setItem('unims_remembered', JSON.stringify({ user, pass, role: currentRole, uni: universityId }));
+               Auth.saveRememberMe(user, pass, currentRole, universityId);
             } else {
-               localStorage.removeItem('unims_remembered');
+               Auth.clearRememberMe();
             }
             
             Utils.showToast(isEn ? 'Login successful!' : 'Đăng nhập thành công!', 'success');
@@ -1020,18 +1033,17 @@ const LoginView = {
     }
 
     // Auto-fill Remember Me
-    const remembered = localStorage.getItem('unims_remembered');
+    const remembered = Auth.getRememberMe();
     if (remembered) {
       try {
-        const data = JSON.parse(remembered);
-        if (data.user) document.getElementById('login-username').value = data.user;
-        if (data.pass) document.getElementById('login-password').value = data.pass;
-        if (data.uni) document.getElementById('login-university').value = data.uni;
+        if (remembered.username) document.getElementById('login-username').value = remembered.username;
+        if (remembered.password) document.getElementById('login-password').value = remembered.password;
+        if (remembered.universityId) document.getElementById('login-university').value = remembered.universityId;
         document.getElementById('remember-me').checked = true;
         
         // Switch to the correct role tab if necessary
-        if (data.role && data.role !== currentRole) {
-           const targetTab = Array.from(tabs).find(t => t.getAttribute('data-role') === data.role);
+        if (remembered.role && remembered.role !== currentRole) {
+           const targetTab = Array.from(tabs).find(t => t.getAttribute('data-role') === remembered.role);
            if (targetTab) targetTab.click();
         }
       } catch (e) {

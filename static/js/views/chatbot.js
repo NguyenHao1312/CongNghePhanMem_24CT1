@@ -1,57 +1,83 @@
 // chatbot.js
 // Trợ lý AI (Chatbot View) với tích hợp Gemini/GPT
 
-const CHATBOT_KB = {
-  greetings: {
-    keywords: ['xin chào', 'hello', 'hi', 'chào', 'hey', 'alo'],
-    vi: 'Xin chào! Tôi là trợ lý AI của UniMS. Tôi có thể giúp bạn:\n• Tra cứu thông tin sinh viên\n• Giải đáp thắc mắc về quy chế\n• Hướng dẫn sử dụng hệ thống\nHãy hỏi tôi bất cứ điều gì!',
-    en: 'Hello! I am the UniMS AI assistant. I can help you with:\n• Student information lookup\n• Explaining regulations\n• System navigation\nAsk me anything!',
+const CHATBOT_KB = [
+  {
+    pattern: /(tuyển sinh|xét tuyển|điểm chuẩn|chỉ tiêu|nguyện vọng|hồ sơ|admission|enrollment|score|quota)/i,
+    vi: "Năm nay, các trường Đại học tại Đà Nẵng chủ yếu xét tuyển theo 4 phương thức: Xét điểm thi THPT, Xét học bạ, Tuyển thẳng và Xét điểm ĐGNL. Bạn có thể xem chi tiết ở Cổng thông tin Tuyển sinh.",
+    en: "Universities in Da Nang mainly admit based on 4 methods: High school exam score, Academic transcript, Direct admission, and Competence assessment. You can check the Admission Portal for details."
   },
-  student_lookup: {
-    keywords: ['tra cứu', 'tìm sinh viên', 'look up', 'find student', 'search student', 'thông tin sinh viên', 'student info'],
-    vi: 'Để tra cứu sinh viên:\n1. Vào menu "Sinh viên" ở sidebar\n2. Sử dụng thanh tìm kiếm phía trên\n3. Bạn có thể tìm theo mã SV, tên, hoặc email\n\nBạn cũng có thể lọc theo khoa hoặc trạng thái.',
-    en: 'To look up a student:\n1. Go to "Students" menu in the sidebar\n2. Use the search bar at the top\n3. You can search by ID, name, or email\n\nYou can also filter by department or status.',
+  {
+    pattern: /(học phí|lệ phí|viện phí|tiền học|tuition|fee|cost|price)/i,
+    vi: "Học phí tại các trường dao động từ 15 - 35 triệu/năm đối với trường công lập (tùy ngành), và 25 - 60 triệu/năm đối với trường tư thục. Có chính sách hỗ trợ miễn giảm cho đối tượng chính sách.",
+    en: "Tuition fees range from 15 - 35 million/year for public universities, and 25 - 60 million/year for private universities. Financial aid is available for eligible students."
   },
-  grades: {
-    keywords: ['điểm', 'grade', 'score', 'mark', 'bảng điểm', 'xem điểm', 'nhập điểm', 'transcript'],
-    vi: 'Về quản lý điểm:\n• Vào "Bảng điểm" để xem/nhập điểm\n• Điểm hệ 10 = Giữa kỳ×30% + Cuối kỳ×50% + Bài tập×20%\n• Điểm chữ: A (≥8.5), B+ (≥8.0), B (≥7.0), C+ (≥6.5), C (≥5.5), D+ (≥5.0), D (≥4.0), F (<4.0)',
-    en: 'About grade management:\n• Go to "Grades" to view/enter grades\n• Base 10 grade = Midterm×30% + Final×50% + Assignment×20%\n• Letter grades: A (≥8.5), B+ (≥8.0), B (≥7.0), C+ (≥6.5), C (≥5.5), D+ (≥5.0), D (≥4.0), F (<4.0)',
+  {
+    pattern: /(học bổng|trợ cấp|vay vốn|miễn giảm|scholarship|grant|loan|financial aid)/i,
+    vi: "Sinh viên có cơ hội nhận học bổng khuyến khích học tập, học bổng doanh nghiệp và hỗ trợ vay vốn sinh viên với lãi suất 0% từ Ngân hàng Chính sách Xã hội.",
+    en: "Students have opportunities to receive academic scholarships, corporate scholarships, and 0% interest student loans from the Social Policy Bank."
   },
-  add_student: {
-    keywords: ['thêm sinh viên', 'add student', 'đăng ký', 'register', 'enroll', 'nhập học'],
-    vi: 'Để thêm sinh viên mới:\n1. Vào "Sinh viên" ở sidebar\n2. Click nút "Thêm sinh viên"\n3. Điền đầy đủ thông tin\n4. Click "Lưu" để hoàn tất',
-    en: 'To add a new student:\n1. Go to "Students" in the sidebar\n2. Click the "Add Student" button\n3. Fill in the required information\n4. Click "Save" to finish',
+  {
+    pattern: /(tín chỉ|môn học|ngành|chương trình đào tạo|credit|course|major|curriculum|syllabus)/i,
+    vi: "Chương trình đào tạo thường có từ 120 - 150 tín chỉ tùy ngành, kéo dài từ 3.5 - 4.5 năm. Sinh viên đăng ký trung bình 15-20 tín chỉ mỗi học kỳ thông qua cổng thông tin nội bộ.",
+    en: "Programs typically consist of 120 - 150 credits depending on the major, lasting 3.5 - 4.5 years. Students register for 15-20 credits per semester via the internal portal."
   },
-  schedule: {
-    keywords: ['lịch', 'thời khoá biểu', 'schedule', 'timetable', 'lịch học'],
-    vi: 'Xem lịch học:\n• Vào "Lớp học" để xem danh sách lớp và lịch\n• Mỗi lớp có thông tin: lịch học, phòng, giáo viên',
-    en: 'View class schedule:\n• Go to "Classes" to see the list of classes and schedules\n• Each class has info: time, room, teacher',
+  {
+    pattern: /(tài khoản|đăng nhập|mật khẩu|quên mật khẩu|account|login|password|forgot|reset)/i,
+    vi: "Để bảo mật, hệ thống không lưu trữ mật khẩu dưới dạng văn bản. Nếu quên mật khẩu, vui lòng liên hệ Phòng Đào tạo hoặc dùng chức năng 'Quên mật khẩu' ở màn hình Đăng nhập.",
+    en: "For security, passwords are encrypted. If you forgot your password, please contact the Academic Affairs Office or use the 'Forgot Password' feature on the Login screen."
   },
-  help_bug: {
-    keywords: ['lỗi', 'bug', 'báo cáo', 'report', 'hỗ trợ', 'support', 'giúp đỡ', 'help'],
-    vi: 'Nếu bạn gặp lỗi:\n1. Vào "Hỗ trợ" ở sidebar\n2. Click "Tạo phiếu hỗ trợ"\n3. Mô tả chi tiết lỗi, chọn mức độ nghiêm trọng\n4. Admin sẽ xem xét và phản hồi',
-    en: 'If you encounter a bug:\n1. Go to "Helpdesk" in the sidebar\n2. Click "Create Ticket"\n3. Describe the issue in detail, select severity\n4. Admins will review and respond',
+  {
+    pattern: /(ký túc xá|chỗ ở|nhà trọ|ktx|dorm|accommodation|housing)/i,
+    vi: "Các trường đều có hệ thống Ký túc xá ưu tiên cho Tân sinh viên và sinh viên diện chính sách. Vui lòng đăng ký ngay khi làm thủ tục nhập học.",
+    en: "Universities provide dormitories prioritized for freshmen and eligible students. Please register during the enrollment process."
   },
-  regulations: {
-    keywords: ['quy chế', 'quy định', 'regulation', 'rule', 'policy', 'chính sách'],
-    vi: 'Một số quy chế cơ bản:\n• Điểm hệ 4 ≥ 1.0 (D) để qua môn\n• Sinh viên có điểm hệ 4 < 1.0 liên tục sẽ bị cảnh báo học vụ',
-    en: 'Some basic regulations:\n• Base 4 grade ≥ 1.0 (D) to pass a course\n• Students with base 4 grade < 1.0 continuously will face academic warning',
+  {
+    pattern: /(câu lạc bộ|hoạt động ngoại khóa|đoàn|hội sinh viên|club|extracurricular|union|activity)/i,
+    vi: "Đời sống sinh viên rất phong phú với hơn 50 câu lạc bộ từ học thuật, nghệ thuật đến thể thao. Theo dõi fanpage Hội Sinh viên để biết lịch sinh hoạt.",
+    en: "Student life is vibrant with over 50 academic, arts, and sports clubs. Follow the Student Union fanpage for event schedules."
   },
-  thanks: {
-    keywords: ['cảm ơn', 'thank', 'thanks', 'tks', 'thank you'],
-    vi: 'Không có gì! Tôi luôn sẵn sàng hỗ trợ bạn. Nếu cần giúp đỡ thêm, cứ hỏi nhé! 😊',
-    en: 'You are welcome! I am always ready to help. If you need anything else, just ask! 😊',
+  {
+    pattern: /(tốt nghiệp|ra trường|việc làm|thực tập|graduate|graduation|job|internship|career)/i,
+    vi: "Tỷ lệ sinh viên có việc làm sau khi ra trường đạt trên 95%. Nhà trường thường xuyên tổ chức Hội chợ Việc làm (Job Fair) kết nối sinh viên với các doanh nghiệp lớn.",
+    en: "The post-graduation employment rate is over 95%. Universities regularly host Job Fairs connecting students with top enterprises."
   },
-  goodbye: {
-    keywords: ['tạm biệt', 'bye', 'goodbye', 'thoát', 'exit'],
-    vi: 'Tạm biệt! Chúc bạn học tập và làm việc hiệu quả! 👋',
-    en: 'Goodbye! Wishing you an effective study and work session! 👋',
+  {
+    pattern: /(bách khoa|kinh tế|sư phạm|ngoại ngữ|fpt|duy tân|đông á|kiến trúc|ute|vku|ump|dut|due|ued|ufls|dau)/i,
+    vi: "Trường này là một trong những đối tác/thành viên chiến lược của hệ thống. Bạn hãy chọn tab 'Các trường Đại học' trên menu để xem thông tin chi tiết (Logo, Học phí, Ngành nghề).",
+    en: "This school is a strategic partner/member of the system. Please select the 'Universities' tab to view detailed info (Logo, Tuition, Majors)."
   },
-  default: {
-    vi: 'Xin lỗi, tôi chưa hiểu câu hỏi của bạn. Hãy thử hỏi về:\n• Tra cứu sinh viên\n• Quản lý điểm\n• Lịch học\n• Quy chế học tập\n• Báo cáo lỗi',
-    en: 'Sorry, I don\'t understand your question. Try asking about:\n• Student lookup\n• Grade management\n• Class schedule\n• Study regulations\n• Bug reporting',
+  {
+    pattern: /(xin chào|hello|hi|chào|bot|ai)/i,
+    vi: "Chào bạn! Tôi là Trợ lý AI Offline của UniMS. Tôi có thể giải đáp các thông tin chung về tuyển sinh, học phí, tín chỉ, tài khoản,... Bạn cần hỏi gì?",
+    en: "Hello! I am the UniMS Offline AI Assistant. I can help with admissions, tuition, credits, accounts, etc. What would you like to know?"
+  },
+  {
+    pattern: /(tìm sinh viên|tra cứu|thông tin sinh viên|look up|search student)/i,
+    vi: "Để tra cứu sinh viên, vào menu 'Sinh viên' ở thanh bên (Sidebar), dùng thanh tìm kiếm để gõ Mã SV hoặc Tên sinh viên.",
+    en: "To search for a student, go to 'Students' in the sidebar and use the search bar to type the Student ID or Name."
+  },
+  {
+    pattern: /(điểm|bảng điểm|grade|score|transcript)/i,
+    vi: "Vào menu 'Bảng điểm' để xem/nhập điểm. Cấu trúc điểm: Giữa kỳ (30%), Cuối kỳ (50%), Bài tập (20%).",
+    en: "Go to the 'Grades' menu to view/enter grades. Grade structure: Midterm (30%), Final (50%), Assignment (20%)."
+  },
+  {
+    pattern: /(thêm sinh viên|add student)/i,
+    vi: "Nếu bạn có quyền Admin/Giáo viên, vào 'Sinh viên' và nhấn nút 'Thêm sinh viên' để tạo hồ sơ mới.",
+    en: "If you have Admin/Teacher rights, go to 'Students' and click 'Add Student' to create a new profile."
+  },
+  {
+    pattern: /(lịch|thời khoá biểu|schedule|timetable)/i,
+    vi: "Lịch học chi tiết xem tại phần 'Lớp học' hoặc tiện ích lịch trên màn hình Tổng quan (Dashboard).",
+    en: "Detailed class schedules can be viewed in the 'Classes' section or the calendar widget on the Dashboard."
+  },
+  {
+    pattern: /(lỗi|bug|báo cáo|report|hỗ trợ|support|giúp đỡ|help)/i,
+    vi: "Gặp sự cố hệ thống? Hãy vào mục 'Hỗ trợ' (Helpdesk) để gửi yêu cầu hỗ trợ (Ticket) đến bộ phận IT.",
+    en: "System issues? Go to the 'Helpdesk' section to submit a support ticket to the IT department."
   }
-};
+];
 
 const ChatbotView = {
   isTyping: false,
@@ -404,29 +430,20 @@ const ChatbotView = {
   getSimulatedAnswer(input, isEn) {
     return new Promise(resolve => {
       setTimeout(() => {
-        const text = input.toLowerCase();
-        let bestMatchKey = null;
-        let maxMatches = 0;
-
-        for (const [key, data] of Object.entries(CHATBOT_KB)) {
-          if (key === 'default') continue;
-          let matches = 0;
-          data.keywords.forEach(kw => {
-            if (text.includes(kw)) matches++;
-          });
-          if (matches > maxMatches) {
-            maxMatches = matches;
-            bestMatchKey = key;
+        const q = input.toLowerCase();
+        let reply = isEn 
+          ? "I'm sorry, my offline database doesn't have an answer for this. Please check the menu options or contact the helpdesk." 
+          : "Xin lỗi, cơ sở dữ liệu offline của tôi chưa có thông tin về vấn đề này. Vui lòng kiểm tra các menu bên trái hoặc liên hệ Hỗ trợ (Helpdesk).";
+        
+        for (const intent of CHATBOT_KB) {
+          if (intent.pattern.test(q)) {
+            reply = isEn ? intent.en : intent.vi;
+            break;
           }
         }
-
-        const langKey = isEn ? 'en' : 'vi';
-        if (bestMatchKey) {
-          resolve(CHATBOT_KB[bestMatchKey][langKey]);
-        } else {
-          resolve(CHATBOT_KB.default[langKey]);
-        }
-      }, 800); // Simulate network delay
+        
+        resolve(reply);
+      }, 600); // Simulate network delay
     });
   }
 };
