@@ -4,7 +4,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>UniMS - Hệ thống Quản lý Đại học</title>
+  <title>UniMS</title>
   <meta name="description" content="Hệ thống quản lý sinh viên hiện đại, hỗ trợ dark mode, đa ngôn ngữ, tích hợp AI Assistant.">
   <meta name="theme-color" content="#3b82f6">
   <link rel="icon" href="{% static 'assets/favicon.svg' %}" type="image/svg+xml">
@@ -20,6 +20,7 @@
     .sidebar.collapsed .sidebar-user { justify-content: center; }
     .sidebar.collapsed .sidebar-footer { padding: var(--space-4) 0; display: flex; justify-content: center; }
   </style>
+  <script src="{% static 'js/apexcharts.js' %}"></script>
 </head>
 <body>
   <!-- Sidebar Navigation -->
@@ -56,8 +57,7 @@
 
   <!-- Main Content -->
   <main class="main-wrapper" id="main-wrapper">
-    <!-- Floating Cubes Background -->
-    <div class="login-particles" id="dashboard-particles" style="position: fixed; top: 0; left: 0; width: 100vw; height: 100vh; z-index: -1; pointer-events: none;"></div>
+    <!-- Floating Cubes Background removed as per design rules -->
     
     <!-- Top Header -->
     <header class="top-header" id="top-header">
@@ -156,7 +156,7 @@
   <script src="{% static 'js/utils.js' %}"></script>
   <script src="{% static 'js/components/LoginBackground.js' %}"></script>
   <script src="{% static 'js/views/login.js' %}"></script>
-  <script src="{% static 'js/views/dashboard.js' %}"></script>
+  <script src="{% static 'js/views/dashboard.js' %}?v=2.4"></script>
   <script src="{% static 'js/views/students.js' %}"></script>
   <script src="{% static 'js/views/teachers.js' %}"></script>
   <script src="{% static 'js/views/classes.js' %}"></script>
@@ -171,3 +171,10 @@
   <script src="{% static 'js/app.js' %}"></script>
 </body>
 </html>
+
+
+
+
+
+
+

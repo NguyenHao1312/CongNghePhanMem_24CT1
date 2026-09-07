@@ -4,7 +4,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>UniMS — Xem trước hệ thống Quản lý Đại học</title>
+  <title>UniMS Review</title>
   <meta name="description" content="Xem trước giao diện hệ thống quản lý đại học UniMS. Trải nghiệm Dashboard, quản lý sinh viên, giáo viên, lớp học, bảng điểm, AI trợ lý và nhiều hơn nữa.">
   <meta name="theme-color" content="#3b82f6">
   <link rel="icon" href="{% static 'assets/favicon.svg' %}" type="image/svg+xml">
@@ -17,15 +17,14 @@
 <body>
   <div class="review-page">
     <!-- Reading Progress Bar -->
-    <div id="rv-progress-bar" style="position: fixed; top: 0; left: 0; height: 3px; width: 0%; background: linear-gradient(90deg, #0d9488, #14b8a6, #6366f1); z-index: 9999; transition: width 0.1s linear; box-shadow: 0 0 8px rgba(20,184,166,0.6);"></div>
+    <div id="rv-progress-bar" style="position: fixed; top: 0; left: 0; height: 3px; width: 0%; background: linear-gradient(90deg, #1e40af, #3b82f6, #60a5fa); z-index: 9999; transition: width 0.1s linear; box-shadow: 0 0 8px rgba(59,130,246,0.6);"></div>
 
     <!-- Scroll to Top Button -->
-    <button id="rv-scroll-top" title="Lên đầu trang" style="position: fixed; bottom: 80px; right: 20px; width: 44px; height: 44px; border-radius: 50%; background: linear-gradient(135deg,#0d9488,#14b8a6); color: #fff; border: none; cursor: pointer; display: none; align-items: center; justify-content: center; font-size: 1.1rem; box-shadow: 0 4px 16px rgba(13,148,136,0.4); z-index: 9998; transition: opacity 0.3s, transform 0.3s;">
+    <button id="rv-scroll-top" title="Lên đầu trang" style="position: fixed; bottom: 80px; right: 20px; width: 44px; height: 44px; border-radius: 50%; background: linear-gradient(135deg,#1e40af,#3b82f6); color: #fff; border: none; cursor: pointer; display: none; align-items: center; justify-content: center; font-size: 1.1rem; box-shadow: 0 4px 16px rgba(59,130,246,0.4); z-index: 9998; transition: opacity 0.3s, transform 0.3s;">
       <i class="fas fa-arrow-up"></i>
     </button>
 
-    <!-- Animated Background Particles -->
-    <div class="login-particles" id="login-particles"></div>
+    <!-- No particles here as per new UI rules -->
 
     <!-- ═══ TOP HEADER ═══ -->
     <header class="review-header">
@@ -106,6 +105,7 @@
   </div>
 
   <script src="{% static 'js/database.js' %}"></script>
-  <script src="{% static 'js/review.js' %}"></script>
+  <script src="{% static 'js/review.js' %}?v=1.1"></script>
 </body>
 </html>
+
