@@ -25,15 +25,6 @@
 <br/>
 
 <p align="center">
-  <!-- Thay thế URL ảnh thực tế của bạn vào các src dưới đây -->
-  <img src="https://raw.githubusercontent.com/tandpfun/skill-icons/main/icons/Vite-Dark.svg" height="0"> 
-  <img src="https://via.placeholder.com/260x420/1f2937/14b8a6.png?text=Dashboard+T%E1%BB%95ng+quan" alt="Dashboard" width="30%">
-  &nbsp;
-  <img src="https://via.placeholder.com/260x420/1f2937/14b8a6.png?text=B%E1%BA%A3ng+%C4%90i%E1%BB%83m" alt="Grade Management" width="30%">
-  &nbsp;
-  <img src="https://via.placeholder.com/260x420/1f2937/14b8a6.png?text=AI+Chatbot" alt="AI Assistant" width="30%">
-</p>
-<p align="center">
   <i><b>Dashboard</b> — <b>Quản lý điểm số chi tiết</b> — <b>AI Chatbot hỗ trợ</b></i>
 </p>
 
