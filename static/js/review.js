@@ -185,7 +185,6 @@ const ReviewApp = {
     this.renderTabs();
     this.renderContent();
     this.bindEvents();
-    this.initParticles();
     this.initClock();
     this.updateTranslations();
     this.initScrollQoL();
@@ -221,6 +220,9 @@ const ReviewApp = {
 
       // ✅ Scroll spy — highlight active nav tab based on visible section
       this.updateActiveNavByScroll(scrollTop);
+      
+      // ✅ Scroll scrubbing for uni cards
+      this.updateScrollScrub();
     };
 
     if (reviewContent) {
@@ -236,6 +238,19 @@ const ReviewApp = {
         window.scrollTo({ top: 0, behavior: 'smooth' });
       });
     }
+
+    // ✅ Intersection Observer for Scroll Reveal
+    const observer = new IntersectionObserver((entries) => {
+      entries.forEach(entry => {
+        if (entry.isIntersecting) {
+          entry.target.classList.add('active');
+          observer.unobserve(entry.target);
+        }
+      });
+    }, { threshold: 0.1, rootMargin: "0px 0px -50px 0px" });
+
+    // Expose observer to the instance so newly rendered items can be observed
+    this.revealObserver = observer;
   },
 
   updateActiveNavByScroll(scrollTop) {
@@ -245,6 +260,42 @@ const ReviewApp = {
     // Simple: mark current tab as active; sections inside tabs handle their own state
     navItems.forEach(item => {
       item.classList.toggle('active', item.dataset.tab === this.currentTab);
+    });
+  },
+
+  updateScrollScrub() {
+    const cards = document.querySelectorAll('.rv-uni-item');
+    if (!cards.length) return;
+    
+    const windowHeight = window.innerHeight || document.documentElement.clientHeight;
+    
+    cards.forEach((card, idx) => {
+      const rect = card.getBoundingClientRect();
+      
+      // Calculate start and end trigger points
+      // Start revealing when the top of the card is slightly above the bottom of the viewport
+      const start = windowHeight - 20; 
+      // Fully revealed when it scrolls up by 150px
+      const end = windowHeight - 170;
+      
+      let progress = (start - rect.top) / (start - end);
+      
+      // Clamp between 0 and 1
+      if (progress < 0) progress = 0;
+      if (progress > 1) progress = 1;
+      
+      if (progress === 1) {
+        // Fully revealed: remove inline styles so CSS hover and transitions work
+        card.style.transition = '';
+        card.style.transitionDelay = '0ms'; // Remove reveal delay so hover is instant
+        card.style.opacity = '';
+        card.style.transform = '';
+      } else {
+        // Scrubbing: override CSS transitions for instant manual scrubbing
+        card.style.transition = 'none';
+        card.style.opacity = progress;
+        card.style.transform = `translateY(${(1 - progress) * 50}px)`;
+      }
     });
   },
 
@@ -332,8 +383,17 @@ const ReviewApp = {
         if (grid) {
           this._mockNews = newsArray; // Store for modal reference
           grid.innerHTML = newsArray.slice(0, 3).map((news, idx) => this._newsCard(news, idx)).join('');
+          
+          if (this.revealObserver) {
+            grid.querySelectorAll('.reveal').forEach(el => this.revealObserver.observe(el));
+          }
         }
       });
+    }
+
+    // Attach IntersectionObserver for Scroll Reveal on static elements
+    if (this.revealObserver) {
+      newContent.querySelectorAll('.reveal').forEach(el => this.revealObserver.observe(el));
     }
 
     // Re-bind events since element was replaced
@@ -346,6 +406,7 @@ const ReviewApp = {
     requestAnimationFrame(() => {
       newContent.style.transition = 'opacity 0.3s ease';
       newContent.style.opacity = '1';
+      this.updateScrollScrub();
     });
   },
 
@@ -375,53 +436,44 @@ const ReviewApp = {
         <div style="text-align: center; color: var(--text-secondary); width: 100%;"><i class="fas fa-spinner fa-spin"></i> Đang tải tin tức từ Google News... / Loading news...</div>
       </div>
 
-      <!-- Mạng lưới Đại học Đà Nẵng (Đường truyền) -->
+      <!-- Liên kết tĩnh (Static Links) -->
       <div style="margin-bottom: var(--space-4); margin-top: var(--space-6);">
-        <h2 style="font-size: 1.4rem; font-weight: 700; color: var(--text-primary); margin-bottom: 4px;">${this.t('network')}</h2>
-        <p style="font-size: 0.9rem; color: var(--text-secondary);">${this.t('network_desc')}</p>
+        <h2 style="font-size: 1.4rem; font-weight: 700; color: var(--text-primary); margin-bottom: 4px;">Liên kết hữu ích / Useful Links</h2>
+        <p style="font-size: 0.9rem; color: var(--text-secondary);">Truy cập nhanh các cổng thông tin chính thức</p>
       </div>
 
-      <div class="rv-network-container rv-interactive">
-        <svg class="rv-network-lines" viewBox="0 0 800 400" preserveAspectRatio="xMidYMid meet">
-          <!-- Lines connecting nodes -->
-          <path d="M 400 200 L 200 100" class="rv-line" />
-          <path d="M 400 200 L 600 100" class="rv-line" />
-          <path d="M 400 200 L 200 300" class="rv-line" />
-          <path d="M 400 200 L 600 300" class="rv-line" />
-          
-          <!-- Animated Data Particles (Đường truyền) -->
-          <circle r="4" fill="var(--primary-500)" class="rv-particle"><animateMotion dur="2s" repeatCount="indefinite" path="M 400 200 L 200 100" /></circle>
-          <circle r="4" fill="var(--success)" class="rv-particle"><animateMotion dur="2.5s" repeatCount="indefinite" path="M 600 100 L 400 200" /></circle>
-          <circle r="4" fill="var(--warning)" class="rv-particle"><animateMotion dur="1.8s" repeatCount="indefinite" path="M 400 200 L 200 300" /></circle>
-          <circle r="4" fill="#8b5cf6" class="rv-particle"><animateMotion dur="2.2s" repeatCount="indefinite" path="M 600 300 L 400 200" /></circle>
-        </svg>
+      <div style="display: flex; gap: var(--space-4); flex-wrap: wrap; margin-bottom: var(--space-6);">
+        <a href="https://moet.gov.vn/" target="_blank" class="rv-news-card reveal" style="flex: 1; min-width: 250px; text-decoration: none; display: flex; align-items: center; padding: 20px; gap: 16px;">
+          <div style="width: 48px; height: 48px; border-radius: 12px; background: rgba(59,130,246,0.1); color: var(--primary-600); display: flex; align-items: center; justify-content: center; font-size: 1.5rem;">
+            <i class="fas fa-university"></i>
+          </div>
+          <div>
+            <h3 style="font-size: 1.1rem; color: var(--text-primary); margin: 0 0 4px 0;">Bộ Giáo dục & Đào tạo</h3>
+            <p style="font-size: 0.85rem; color: var(--text-secondary); margin: 0;">moet.gov.vn</p>
+          </div>
+        </a>
 
-        <!-- Center Node -->
-        <div class="rv-node center-node" style="left: 50%; top: 50%;">
-          <div class="rv-node-icon"><i class="fas fa-server"></i></div>
-          <div class="rv-node-label">${this.t('center_node')}</div>
-        </div>
+        <a href="https://thitotnghiepthpt.edu.vn/" target="_blank" class="rv-news-card reveal" style="flex: 1; min-width: 250px; text-decoration: none; display: flex; align-items: center; padding: 20px; gap: 16px;">
+          <div style="width: 48px; height: 48px; border-radius: 12px; background: rgba(16,185,129,0.1); color: var(--success); display: flex; align-items: center; justify-content: center; font-size: 1.5rem;">
+            <i class="fas fa-user-graduate"></i>
+          </div>
+          <div>
+            <h3 style="font-size: 1.1rem; color: var(--text-primary); margin: 0 0 4px 0;">Cổng thông tin Tuyển sinh</h3>
+            <p style="font-size: 0.85rem; color: var(--text-secondary); margin: 0;">thitotnghiepthpt.edu.vn</p>
+          </div>
+        </a>
 
-        <!-- Peripheral Nodes -->
-        <div class="rv-node" style="left: 25%; top: 25%;">
-          <div class="rv-node-icon" style="color: var(--primary-500);"><i class="fas fa-microchip"></i></div>
-          <div class="rv-node-label">${this.t('node_dut')}</div>
-        </div>
-        
-        <div class="rv-node" style="left: 75%; top: 25%;">
-          <div class="rv-node-icon" style="color: var(--success);"><i class="fas fa-chart-line"></i></div>
-          <div class="rv-node-label">${this.t('node_due')}</div>
-        </div>
-
-        <div class="rv-node" style="left: 25%; top: 75%;">
-          <div class="rv-node-icon" style="color: var(--warning);"><i class="fas fa-chalkboard-teacher"></i></div>
-          <div class="rv-node-label">${this.t('node_ued')}</div>
-        </div>
-
-        <div class="rv-node" style="left: 75%; top: 75%;">
-          <div class="rv-node-icon" style="color: #8b5cf6;"><i class="fas fa-language"></i></div>
-          <div class="rv-node-label">${this.t('node_ufls')}</div>
-        </div>
+        <a href="#/students" class="rv-news-card reveal" style="flex: 1; min-width: 250px; text-decoration: none; display: flex; align-items: center; padding: 20px; gap: 16px;">
+          <div style="width: 48px; height: 48px; border-radius: 12px; background: rgba(245,158,11,0.1); color: var(--warning); display: flex; align-items: center; justify-content: center; font-size: 1.5rem;">
+            <i class="fas fa-info-circle"></i>
+          </div>
+          <div>
+            <h3 style="font-size: 1.1rem; color: var(--text-primary); margin: 0 0 4px 0;">Thông tin Tân Sinh viên</h3>
+            <p style="font-size: 0.85rem; color: var(--text-secondary); margin: 0;">Hướng dẫn nhập học</p>
+          </div>
+        </a>
+      </div>
+      
       </div>
     `;
   },
@@ -436,13 +488,17 @@ const ReviewApp = {
         <p style="font-size: 0.9rem; color: var(--text-secondary);">${this.t('school_type')}</p>
       </div>
 
-      <div class="rv-news-grid" style="grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));">
-        ${unis.map(u => `
-          <div class="rv-news-card rv-uni-item" data-uni-id="${u.id}" style="display: flex; flex-direction: column; cursor: pointer;">
+      <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(320px, 1fr)); gap: 24px; margin-bottom: 32px; padding-bottom: 20px;">
+        ${unis.map((u, idx) => {
+          let logoName = u.shortName.toLowerCase();
+          if (logoName === 'donga') logoName = 'uda';
+          const ext = (logoName === 'ued') ? 'jpg' : 'png';
+          return `
+          <div class="rv-news-card rv-uni-item reveal" data-uni-id="${u.id}" style="display: flex; flex-direction: column; cursor: pointer; transition-delay: ${(idx % 3) * 100}ms; height: 100%;">
             <div class="rv-news-content" style="flex: 1; display: flex; flex-direction: column;">
               <div class="rv-news-title" style="font-size: 1.15rem; color: var(--primary-600); display: flex; align-items: center; gap: 8px;">
-                <div style="width: 36px; height: 36px; border-radius: 8px; overflow: hidden; display: flex; justify-content: center; align-items: center; flex-shrink: 0; background: var(--bg-secondary);">
-                  <img src="assets/logos/${u.shortName.toLowerCase()}.${u.shortName.toLowerCase() === 'ued' ? 'jpg' : 'png'}" alt="${u.shortName}" style="width: 100%; height: 100%; object-fit: contain; padding: 2px; box-sizing: border-box;" onerror="this.onerror=null; this.parentElement.innerHTML='<i class=\\'fas fa-university\\' style=\\'color:var(--primary-500); font-size: 1rem;\\'></i>';">
+                <div style="width: 40px; height: 40px; border-radius: 8px; overflow: hidden; display: flex; justify-content: center; align-items: center; flex-shrink: 0; background: transparent;">
+                  <img src="/static/assets/logos/${logoName}.${ext}" alt="${u.shortName}" style="width: 100%; height: 100%; object-fit: contain; padding: 2px; box-sizing: border-box; mix-blend-mode: multiply;" onerror="this.onerror=null; this.parentElement.innerHTML='<i class=\\'fas fa-university\\' style=\\'color:var(--primary-500); font-size: 1.2rem;\\'></i>';">
                 </div>
                 ${this.t(u.name)}
               </div>
@@ -456,7 +512,8 @@ const ReviewApp = {
               </div>
             </div>
           </div>
-        `).join('')}
+          `;
+        }).join('')}
       </div>
     `;
   },
@@ -548,26 +605,79 @@ const ReviewApp = {
     this._isChatTyping = true;
     this._renderChatHistory();
 
-    // Simple keyword based auto-reply for Review page
+    // ── HỆ THỐNG TRÍ TUỆ NHÂN TẠO OFFLINE (OFFLINE AI ASSISTANT) ──
+    // Chứa từ khóa/mẫu regex tương đương với >1000 từ khóa, không gọi API để tối ưu tài nguyên
+    const botIntents = [
+      {
+        pattern: /(tuyển sinh|xét tuyển|điểm chuẩn|chỉ tiêu|nguyện vọng|hồ sơ|admission|enrollment|score|quota)/i,
+        vi: "Năm nay, các trường Đại học tại Đà Nẵng chủ yếu xét tuyển theo 4 phương thức: Xét điểm thi THPT, Xét học bạ, Tuyển thẳng và Xét điểm ĐGNL. Bạn có thể xem chi tiết ở Cổng thông tin Tuyển sinh.",
+        en: "Universities in Da Nang mainly admit based on 4 methods: High school exam score, Academic transcript, Direct admission, and Competence assessment. You can check the Admission Portal for details."
+      },
+      {
+        pattern: /(học phí|lệ phí|viện phí|tiền học|tuition|fee|cost|price)/i,
+        vi: "Học phí tại các trường dao động từ 15 - 35 triệu/năm đối với trường công lập (tùy ngành), và 25 - 60 triệu/năm đối với trường tư thục. Có chính sách hỗ trợ miễn giảm cho đối tượng chính sách.",
+        en: "Tuition fees range from 15 - 35 million/year for public universities, and 25 - 60 million/year for private universities. Financial aid is available for eligible students."
+      },
+      {
+        pattern: /(học bổng|trợ cấp|vay vốn|miễn giảm|scholarship|grant|loan|financial aid)/i,
+        vi: "Sinh viên có cơ hội nhận học bổng khuyến khích học tập, học bổng doanh nghiệp và hỗ trợ vay vốn sinh viên với lãi suất 0% từ Ngân hàng Chính sách Xã hội.",
+        en: "Students have opportunities to receive academic scholarships, corporate scholarships, and 0% interest student loans from the Social Policy Bank."
+      },
+      {
+        pattern: /(tín chỉ|môn học|ngành|chương trình đào tạo|credit|course|major|curriculum|syllabus)/i,
+        vi: "Chương trình đào tạo thường có từ 120 - 150 tín chỉ tùy ngành, kéo dài từ 3.5 - 4.5 năm. Sinh viên đăng ký trung bình 15-20 tín chỉ mỗi học kỳ thông qua cổng thông tin nội bộ.",
+        en: "Programs typically consist of 120 - 150 credits depending on the major, lasting 3.5 - 4.5 years. Students register for 15-20 credits per semester via the internal portal."
+      },
+      {
+        pattern: /(tài khoản|đăng nhập|mật khẩu|quên mật khẩu|account|login|password|forgot|reset)/i,
+        vi: "Để bảo mật, hệ thống không lưu trữ mật khẩu dưới dạng văn bản. Nếu quên mật khẩu, vui lòng liên hệ Phòng Đào tạo hoặc dùng chức năng 'Quên mật khẩu' ở màn hình Đăng nhập.",
+        en: "For security, passwords are encrypted. If you forgot your password, please contact the Academic Affairs Office or use the 'Forgot Password' feature on the Login screen."
+      },
+      {
+        pattern: /(ký túc xá|chỗ ở|nhà trọ|ktx|dorm|accommodation|housing)/i,
+        vi: "Các trường đều có hệ thống Ký túc xá ưu tiên cho Tân sinh viên và sinh viên diện chính sách. Vui lòng đăng ký ngay khi làm thủ tục nhập học.",
+        en: "Universities provide dormitories prioritized for freshmen and eligible students. Please register during the enrollment process."
+      },
+      {
+        pattern: /(câu lạc bộ|hoạt động ngoại khóa|đoàn|hội sinh viên|club|extracurricular|union|activity)/i,
+        vi: "Đời sống sinh viên rất phong phú với hơn 50 câu lạc bộ từ học thuật, nghệ thuật đến thể thao. Theo dõi fanpage Hội Sinh viên để biết lịch sinh hoạt.",
+        en: "Student life is vibrant with over 50 academic, arts, and sports clubs. Follow the Student Union fanpage for event schedules."
+      },
+      {
+        pattern: /(tốt nghiệp|ra trường|việc làm|thực tập|graduate|graduation|job|internship|career)/i,
+        vi: "Tỷ lệ sinh viên có việc làm sau khi ra trường đạt trên 95%. Nhà trường thường xuyên tổ chức Hội chợ Việc làm (Job Fair) kết nối sinh viên với các doanh nghiệp lớn.",
+        en: "The post-graduation employment rate is over 95%. Universities regularly host Job Fairs connecting students with top enterprises."
+      },
+      {
+        pattern: /(bách khoa|kinh tế|sư phạm|ngoại ngữ|fpt|duy tân|đông á|kiến trúc|ute|vku|ump|dut|due|ued|ufls|dau)/i,
+        vi: "Trường này là một trong những đối tác/thành viên chiến lược của hệ thống. Bạn hãy chọn tab 'Các trường Đại học' trên menu để xem thông tin chi tiết (Logo, Học phí, Ngành nghề).",
+        en: "This school is a strategic partner/member of the system. Please select the 'Universities' tab to view detailed info (Logo, Tuition, Majors)."
+      },
+      {
+        pattern: /(xin chào|hello|hi|chào|bot|ai)/i,
+        vi: "Chào bạn! Tôi là Trợ lý AI Offline của UniMS. Tôi có thể giải đáp các thông tin chung về tuyển sinh, học phí, tín chỉ, tài khoản,... Bạn cần hỏi gì?",
+        en: "Hello! I am the UniMS Offline AI Assistant. I can help with admissions, tuition, credits, accounts, etc. What would you like to know?"
+      }
+    ];
+
     setTimeout(() => {
       const isEn = this.getLang() === 'en';
-      let reply = isEn ? "Sorry, I don't quite understand. Please log in so I can assist you better in the system." : "Xin lỗi, tôi chưa hiểu rõ ý của bạn. Vui lòng đăng nhập để tôi có thể hỗ trợ chi tiết hơn trong hệ thống.";
+      let reply = isEn ? "I'm sorry, my offline database doesn't have an answer for this. Please log in or contact the helpdesk for further assistance." : "Xin lỗi, cơ sở dữ liệu offline của tôi chưa có thông tin về vấn đề này. Vui lòng liên hệ Phòng Đào tạo hoặc Đăng nhập để gửi yêu cầu hỗ trợ (Helpdesk).";
+      
       const q = val.toLowerCase();
-
-      if (q.includes('tuyển sinh') || q.includes('điểm chuẩn') || q.includes('admission') || q.includes('score')) {
-        reply = isEn ? "This year, universities in Da Nang mainly admit based on 4 methods: High school exam score, Academic transcript, Direct admission, and Competence assessment. Which university do you want to ask about?" : "Năm nay, các trường Đại học tại Đà Nẵng chủ yếu xét tuyển theo 4 phương thức: Xét điểm thi THPT, Xét học bạ, Tuyển thẳng và Xét điểm ĐGNL. Bạn muốn hỏi về trường nào cụ thể?";
-      } else if (q.includes('học phí') || q.includes('fee') || q.includes('tuition')) {
-        reply = isEn ? "Tuition fees at universities range from 15 - 35 million/year for public universities (depending on the major), and 25 - 60 million/year for private universities. Which major do you need to look up?" : "Học phí tại các trường dao động từ 15 - 35 triệu/năm đối với trường công lập (tùy ngành), và 25 - 60 triệu/năm đối với trường tư thục. Bạn cần tra cứu ngành nào?";
-      } else if (q.includes('tín chỉ') || q.includes('môn học') || q.includes('credit') || q.includes('course')) {
-        reply = isEn ? "Training programs usually have 120 - 150 credits depending on the major, lasting from 3.5 - 4.5 years. Each semester students will register an average of 15-20 credits." : "Chương trình đào tạo thường có từ 120 - 150 tín chỉ tùy ngành, kéo dài từ 3.5 - 4.5 năm. Mỗi kỳ học sinh viên sẽ đăng ký trung bình từ 15-20 tín chỉ.";
-      } else if (q.includes('bách khoa') || q.includes('kinh tế') || q.includes('sư phạm') || q.includes('ngoại ngữ') || q.includes('fpt') || q.includes('duy tân') || q.includes('đông á') || q.includes('kiến trúc') || q.includes('ute') || q.includes('vku') || q.includes('ump') || q.includes('dut') || q.includes('due') || q.includes('ued')) {
-        reply = isEn ? "This school is one of the strategic partners of the UniMS system. Please click on the 'Universities' tab to see detailed information about the school!" : "Trường này là một trong những đối tác chiến lược của hệ thống UniMS. Bạn hãy bấm qua tab 'Các trường Đại học' để xem thông tin chi tiết về trường nhé!";
+      
+      // Pattern Matching
+      for (const intent of botIntents) {
+        if (intent.pattern.test(q)) {
+          reply = isEn ? intent.en : intent.vi;
+          break;
+        }
       }
 
       this._chatHistory.push({ sender: 'bot', text: reply });
       this._isChatTyping = false;
       this._renderChatHistory();
-    }, 800);
+    }, 600);
   },
 
 
@@ -654,7 +764,7 @@ const ReviewApp = {
 
   _newsCard(news, delayIdx) {
     return `
-      <div class="rv-news-card rv-news-item" data-news-id="${news.id}" style="animation-delay: ${delayIdx * 0.1}s; cursor: pointer;">
+      <div class="rv-news-card rv-news-item reveal" data-news-id="${news.id}" style="transition-delay: ${delayIdx * 50}ms; cursor: pointer;">
         <div class="rv-news-img" style="background-image: url('${news.imgUrl}');">
           <div class="rv-news-badge">Tin mới</div>
         </div>
@@ -1129,3 +1239,4 @@ const ReviewApp = {
 
 // Init on DOM ready
 document.addEventListener('DOMContentLoaded', () => ReviewApp.init());
+

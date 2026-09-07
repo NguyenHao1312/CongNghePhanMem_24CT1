@@ -970,19 +970,19 @@ function t(key, params = {}) {
 }
 
 const NAV_ITEMS = [
-  { hash: '#/dashboard', color: '#6366f1', bg: 'rgba(99,102,241,0.15)', icon: '<svg viewBox="0 0 24 24" class="nav-svg"><rect x="3" y="3" width="7" height="7" rx="1.5" fill="currentColor" opacity="0.4"/><rect x="14" y="3" width="7" height="11" rx="1.5" fill="currentColor"/><rect x="14" y="18" width="7" height="3" rx="1.5" fill="currentColor" opacity="0.4"/><rect x="3" y="14" width="7" height="7" rx="1.5" fill="currentColor"/></svg>', label: 'nav_dashboard', id: 'dashboard' },
-  { hash: '#/students', color: '#14b8a6', bg: 'rgba(20,184,166,0.15)', icon: '<svg viewBox="0 0 24 24" class="nav-svg"><path d="M12 3l8 4.5-8 4.5-8-4.5L12 3z" fill="currentColor"/><path d="M12 12l8-4.5v5.8a2 2 0 01-1.1 1.8l-5.9 3.2a2 2 0 01-2 0l-5.9-3.2a2 2 0 01-1.1-1.8V7.5L12 12z" fill="currentColor" opacity="0.4"/></svg>', label: 'nav_students', id: 'students' },
-  { hash: '#/teachers', color: '#f59e0b', bg: 'rgba(245,158,11,0.15)', icon: '<svg viewBox="0 0 24 24" class="nav-svg"><rect x="2" y="3" width="20" height="13" rx="2" fill="currentColor" opacity="0.4"/><path d="M8 21h8M12 16v5" stroke="currentColor" stroke-width="2" stroke-linecap="round"/><circle cx="12" cy="9" r="3" fill="currentColor"/><path d="M7 16c0-2.2 2-4 5-4s5 1.8 5 4" stroke="currentColor" stroke-width="2" stroke-linecap="round" fill="none"/></svg>', label: 'nav_teachers', id: 'teachers' },
-  { hash: '#/classes', color: '#3b82f6', bg: 'rgba(59,130,246,0.15)', icon: '<svg viewBox="0 0 24 24" class="nav-svg"><path d="M4 6a2 2 0 012-2h12a2 2 0 012 2v12a2 2 0 01-2 2H6a2 2 0 01-2-2V6z" fill="currentColor" opacity="0.3"/><path d="M8 10h8M8 14h5" stroke="currentColor" stroke-width="2" stroke-linecap="round"/><path d="M16 4v16M8 4v16" stroke="currentColor" stroke-width="1.5" stroke-dasharray="2 4" opacity="0.5"/></svg>', label: 'nav_classes', id: 'classes' },
-  { hash: '#/registration', color: '#ec4899', bg: 'rgba(236,72,153,0.15)', icon: '<svg viewBox="0 0 24 24" class="nav-svg"><rect x="5" y="3" width="14" height="18" rx="2" fill="currentColor" opacity="0.3"/><path d="M9 9h6M9 13h6M9 17h4" stroke="currentColor" stroke-width="2" stroke-linecap="round"/><path d="M14 2l5 5h-3a2 2 0 01-2-2V2z" fill="currentColor"/></svg>', label: 'nav_registration', id: 'registration' },
-  { hash: '#/tuition', color: '#10b981', bg: 'rgba(16,185,129,0.15)', icon: '<svg viewBox="0 0 24 24" class="nav-svg"><rect x="3" y="6" width="18" height="12" rx="2" fill="currentColor" opacity="0.3"/><circle cx="12" cy="12" r="3" fill="currentColor"/><path d="M3 10h18M3 14h18" stroke="currentColor" stroke-width="1" opacity="0.5"/><path d="M20 6h-2M20 18h-2" stroke="currentColor" stroke-width="2"/></svg>', label: 'nav_tuition', id: 'tuition' },
-  { hash: '#/grades', color: '#f97316', bg: 'rgba(249,115,22,0.15)', icon: '<svg viewBox="0 0 24 24" class="nav-svg"><path d="M12 2l2.4 7.4h7.6l-6.2 4.5 2.4 7.4-6.2-4.5-6.2 4.5 2.4-7.4-6.2-4.5h7.6z" fill="currentColor" opacity="0.4"/><path d="M12 5l1.6 4.8h5.1l-4.1 3 1.6 4.8-4.2-3-4.2 3 1.6-4.8-4.1-3h5.1z" fill="currentColor"/></svg>', label: 'nav_grades', id: 'grades' },
+  { hash: '#/dashboard', color: '#3B82F6', icon: '<svg viewBox="0 0 24 24" class="nav-svg"><rect x="3" y="3" width="7" height="7" rx="1.5" fill="currentColor" opacity="0.4"/><rect x="14" y="3" width="7" height="11" rx="1.5" fill="currentColor"/><rect x="14" y="18" width="7" height="3" rx="1.5" fill="currentColor" opacity="0.4"/><rect x="3" y="14" width="7" height="7" rx="1.5" fill="currentColor"/></svg>', label: 'nav_dashboard', id: 'dashboard' },
+  { hash: '#/students', color: '#10B981', icon: '<svg viewBox="0 0 24 24" class="nav-svg"><path d="M12 3l8 4.5-8 4.5-8-4.5L12 3z" fill="currentColor"/><path d="M12 12l8-4.5v5.8a2 2 0 01-1.1 1.8l-5.9 3.2a2 2 0 01-2 0l-5.9-3.2a2 2 0 01-1.1-1.8V7.5L12 12z" fill="currentColor" opacity="0.4"/></svg>', label: 'nav_students', id: 'students' },
+  { hash: '#/teachers', color: '#F59E0B', icon: '<svg viewBox="0 0 24 24" class="nav-svg"><rect x="2" y="3" width="20" height="13" rx="2" fill="currentColor" opacity="0.4"/><path d="M8 21h8M12 16v5" stroke="currentColor" stroke-width="2" stroke-linecap="round"/><circle cx="12" cy="9" r="3" fill="currentColor"/><path d="M7 16c0-2.2 2-4 5-4s5 1.8 5 4" stroke="currentColor" stroke-width="2" stroke-linecap="round" fill="none"/></svg>', label: 'nav_teachers', id: 'teachers' },
+  { hash: '#/classes', color: '#8B5CF6', icon: '<svg viewBox="0 0 24 24" class="nav-svg"><path d="M4 6a2 2 0 012-2h12a2 2 0 012 2v12a2 2 0 01-2 2H6a2 2 0 01-2-2V6z" fill="currentColor" opacity="0.3"/><path d="M8 10h8M8 14h5" stroke="currentColor" stroke-width="2" stroke-linecap="round"/><path d="M16 4v16M8 4v16" stroke="currentColor" stroke-width="1.5" stroke-dasharray="2 4" opacity="0.5"/></svg>', label: 'nav_classes', id: 'classes' },
+  { hash: '#/registration', color: '#EC4899', icon: '<svg viewBox="0 0 24 24" class="nav-svg"><rect x="5" y="3" width="14" height="18" rx="2" fill="currentColor" opacity="0.3"/><path d="M9 9h6M9 13h6M9 17h4" stroke="currentColor" stroke-width="2" stroke-linecap="round"/><path d="M14 2l5 5h-3a2 2 0 01-2-2V2z" fill="currentColor"/></svg>', label: 'nav_registration', id: 'registration' },
+  { hash: '#/tuition', color: '#F43F5E', icon: '<svg viewBox="0 0 24 24" class="nav-svg"><rect x="3" y="6" width="18" height="12" rx="2" fill="currentColor" opacity="0.3"/><circle cx="12" cy="12" r="3" fill="currentColor"/><path d="M3 10h18M3 14h18" stroke="currentColor" stroke-width="1" opacity="0.5"/><path d="M20 6h-2M20 18h-2" stroke="currentColor" stroke-width="2"/></svg>', label: 'nav_tuition', id: 'tuition' },
+  { hash: '#/grades', color: '#0EA5E9', icon: '<svg viewBox="0 0 24 24" class="nav-svg"><path d="M12 2l2.4 7.4h7.6l-6.2 4.5 2.4 7.4-6.2-4.5-6.2 4.5 2.4-7.4-6.2-4.5h7.6z" fill="currentColor" opacity="0.4"/><path d="M12 5l1.6 4.8h5.1l-4.1 3 1.6 4.8-4.2-3-4.2 3 1.6-4.8-4.1-3h5.1z" fill="currentColor"/></svg>', label: 'nav_grades', id: 'grades' },
   { divider: true },
-  { hash: '#/chatbot', color: '#8b5cf6', bg: 'rgba(139,92,246,0.15)', icon: '<svg viewBox="0 0 24 24" class="nav-svg"><path d="M21 11.5a8.38 8.38 0 01-.9 3.8 8.5 8.5 0 01-7.6 4.7 8.38 8.38 0 01-3.8-.9L3 21l1.9-5.7a8.38 8.38 0 01-.9-3.8 8.5 8.5 0 014.7-7.6 8.38 8.38 0 013.8-.9h.5a8.48 8.48 0 018 8v.5z" fill="currentColor" opacity="0.3"/><circle cx="9" cy="10" r="1.5" fill="currentColor"/><circle cx="15" cy="10" r="1.5" fill="currentColor"/><path d="M9 15h6" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg>', label: 'nav_chatbot', id: 'chatbot' },
-  { hash: '#/helpdesk', color: '#ef4444', bg: 'rgba(239,68,68,0.15)', icon: '<svg viewBox="0 0 24 24" class="nav-svg"><circle cx="12" cy="12" r="10" fill="currentColor" opacity="0.2"/><path d="M12 2a10 10 0 00-10 10v4a2 2 0 002 2h2a2 2 0 002-2v-4a2 2 0 00-2-2H4" stroke="currentColor" stroke-width="2" stroke-linecap="round" fill="none"/><path d="M12 2a10 10 0 0110 10v4a2 2 0 01-2 2h-2a2 2 0 01-2-2v-4a2 2 0 012-2h2" stroke="currentColor" stroke-width="2" stroke-linecap="round" fill="none"/><path d="M15 22H9" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg>', label: 'nav_helpdesk', id: 'helpdesk' },
-  { hash: '#/profile', color: '#06b6d4', bg: 'rgba(6,182,212,0.15)', icon: '<svg viewBox="0 0 24 24" class="nav-svg"><rect x="3" y="4" width="18" height="16" rx="2" fill="currentColor" opacity="0.3"/><circle cx="12" cy="10" r="3" fill="currentColor"/><path d="M7 17c0-2.2 2-4 5-4s5 1.8 5 4" stroke="currentColor" stroke-width="2" stroke-linecap="round" fill="none"/></svg>', label: 'nav_profile', id: 'profile' },
+  { hash: '#/chatbot', color: '#14B8A6', icon: '<svg viewBox="0 0 24 24" class="nav-svg"><path d="M21 11.5a8.38 8.38 0 01-.9 3.8 8.5 8.5 0 01-7.6 4.7 8.38 8.38 0 01-3.8-.9L3 21l1.9-5.7a8.38 8.38 0 01-.9-3.8 8.5 8.5 0 014.7-7.6 8.38 8.38 0 013.8-.9h.5a8.48 8.48 0 018 8v.5z" fill="currentColor" opacity="0.3"/><circle cx="9" cy="10" r="1.5" fill="currentColor"/><circle cx="15" cy="10" r="1.5" fill="currentColor"/><path d="M9 15h6" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg>', label: 'nav_chatbot', id: 'chatbot' },
+  { hash: '#/helpdesk', color: '#F97316', icon: '<svg viewBox="0 0 24 24" class="nav-svg"><circle cx="12" cy="12" r="10" fill="currentColor" opacity="0.2"/><path d="M12 2a10 10 0 00-10 10v4a2 2 0 002 2h2a2 2 0 002-2v-4a2 2 0 00-2-2H4" stroke="currentColor" stroke-width="2" stroke-linecap="round" fill="none"/><path d="M12 2a10 10 0 0110 10v4a2 2 0 01-2 2h-2a2 2 0 01-2-2v-4a2 2 0 012-2h2" stroke="currentColor" stroke-width="2" stroke-linecap="round" fill="none"/><path d="M15 22H9" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg>', label: 'nav_helpdesk', id: 'helpdesk' },
+  { hash: '#/profile', color: '#6366F1', icon: '<svg viewBox="0 0 24 24" class="nav-svg"><rect x="3" y="4" width="18" height="16" rx="2" fill="currentColor" opacity="0.3"/><circle cx="12" cy="10" r="3" fill="currentColor"/><path d="M7 17c0-2.2 2-4 5-4s5 1.8 5 4" stroke="currentColor" stroke-width="2" stroke-linecap="round" fill="none"/></svg>', label: 'nav_profile', id: 'profile' },
   { divider: true, id: 'admin_divider' },
-  { hash: '#/workshop', color: '#64748b', bg: 'rgba(100,116,139,0.15)', icon: '<svg viewBox="0 0 24 24" class="nav-svg"><path d="M12 22a10 10 0 100-20 10 10 0 000 20z" fill="currentColor" opacity="0.2"/><path d="M12 16l-3 3-2-2 3-3V9l4-4 2 2-4 4v5z" fill="currentColor"/><circle cx="12" cy="12" r="2" fill="currentColor"/></svg>', label: 'nav_workshop', id: 'workshop' },
+  { hash: '#/workshop', color: '#EF4444', icon: '<svg viewBox="0 0 24 24" class="nav-svg"><path d="M12 22a10 10 0 100-20 10 10 0 000 20z" fill="currentColor" opacity="0.2"/><path d="M12 16l-3 3-2-2 3-3V9l4-4 2 2-4 4v5z" fill="currentColor"/><circle cx="12" cy="12" r="2" fill="currentColor"/></svg>', label: 'nav_workshop', id: 'workshop' },
 ];
 
 const routes = {
@@ -1154,7 +1154,7 @@ const App = {
       if (!Auth.canAccess(item.id)) return '';
 
       const iconColor = item.color || 'var(--primary-500)';
-      const iconBg = item.bg || 'rgba(255,255,255,0.05)';
+      const iconBg = item.bg || (item.color + '1A');
       const label = t(item.label);
 
       return `
@@ -1187,7 +1187,7 @@ const App = {
     const show = (navEl) => {
       clearTimeout(hideTimer);
       const label = navEl.dataset.tooltip;
-      const color = navEl.dataset.tooltipColor || '#14b8a6';
+      const color = navEl.dataset.tooltipColor || '#3b82f6';
       if (!label) return;
 
       tip.textContent = label;
@@ -1303,9 +1303,11 @@ const App = {
     
     if (settings.theme === 'dark') {
       document.body.classList.add('dark-mode');
+      document.documentElement.setAttribute('data-theme', 'dark');
       if (btnTheme) btnTheme.innerHTML = '<i class="fas fa-sun"></i>';
     } else {
       document.body.classList.remove('dark-mode');
+      document.documentElement.setAttribute('data-theme', 'light');
       if (btnTheme) btnTheme.innerHTML = '<i class="fas fa-moon"></i>';
     }
     
@@ -1314,6 +1316,7 @@ const App = {
       btnTheme.parentNode.replaceChild(newBtn, btnTheme);
       newBtn.addEventListener('click', () => {
         const isDark = document.body.classList.toggle('dark-mode');
+        document.documentElement.setAttribute('data-theme', isDark ? 'dark' : 'light');
         Database.settings.save({ theme: isDark ? 'dark' : 'light' });
         newBtn.innerHTML = isDark ? '<i class="fas fa-sun"></i>' : '<i class="fas fa-moon"></i>';
       });
@@ -1603,3 +1606,4 @@ const App = {
 };
 
 document.addEventListener('DOMContentLoaded', () => App.init());
+

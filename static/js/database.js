@@ -12,7 +12,8 @@ const STORAGE_KEYS = {
   NOTIFICATIONS: 'unims_notifications',
   REGISTRATIONS: 'unims_registrations',
   STORAGE_LOGS: 'unims_storage_logs',
-  LOGIN_HISTORY: 'unims_login_history'
+  LOGIN_HISTORY: 'unims_login_history',
+  ACTIVE_SESSIONS: 'unims_active_sessions'
 };
 
 const DEPARTMENTS = [
