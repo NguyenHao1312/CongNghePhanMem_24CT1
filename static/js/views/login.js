@@ -880,6 +880,22 @@ const LoginView = {
             return;
           }
 
+          // --- ADDED: Send to SQL Server API ---
+          fetch('/api/register/', {
+            method: 'POST',
+            headers: {'Content-Type': 'application/json'},
+            body: JSON.stringify({
+              username: username,
+              name: name,
+              password: password,
+              role: currentRole,
+              universityId: uniId
+            })
+          }).then(res => res.json()).then(data => {
+            console.log("SQL Server sync:", data);
+          }).catch(err => console.error("SQL Sync error:", err));
+          // -------------------------------------
+          
           // Add to students/teachers collection using properly abstracted DB methods
           let targetId = null;
           if (currentRole === 'student') {
