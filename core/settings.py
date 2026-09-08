@@ -79,8 +79,13 @@ WSGI_APPLICATION = 'core.wsgi.application'
 
 DATABASES = {
     'default': {
-        'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': BASE_DIR / 'db.sqlite3',
+        'ENGINE': 'mssql',
+        'NAME': 'unims_db',
+        'HOST': r'.\SQLEXPRESS',
+        'OPTIONS': {
+            'driver': 'ODBC Driver 17 for SQL Server',
+            'extra_params': 'TrustServerCertificate=yes;Trusted_Connection=yes;'
+        }
     }
 }
 
@@ -144,3 +149,4 @@ STATICFILES_DIRS = [
 
 # Nơi Render sẽ gom toàn bộ file lại khi chạy lệnh collectstatic
 STATIC_ROOT = BASE_DIR / 'staticfiles'
+AUTH_USER_MODEL = 'student_management.CustomUser'
